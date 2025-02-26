@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from data_models import User, Movie
+from project.data_models import User, Movie
 
 
 class DataManagerInterface(ABC):

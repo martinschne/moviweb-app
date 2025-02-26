@@ -2,7 +2,7 @@
 import logging
 
 from app import app, db
-from data_models import User, Movie
+from project.data_models import User, Movie
 
 logger = logging.getLogger("setup")
 
