@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Users - Moviweb{% endblock %}
+{% block header %}Users{% endblock %}
+
+{% block content %}
+    {% if not users %}
+    <p>No users were found, please add one first.</p>
+    {% else %}
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Action</th>
+            </tr>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.name }}</td>
+                    <td>
+                        <a href="{{ url_for('user_movies', user_id=user['id']) }}">Show Movies</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+    <a href="{{ url_for('add_user') }}" class="action-button">Add User</a>
+{% endblock %}

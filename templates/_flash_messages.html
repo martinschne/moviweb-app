@@ -1,0 +1,9 @@
+{% with messages = get_flashed_messages(with_categories=false) %}
+    {% if messages %}
+        <ul class="validation-messages">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}

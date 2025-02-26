@@ -1,11 +1,12 @@
+import logging
 from abc import ABC
-from logging import Logger
 
 from sqlalchemy.exc import SQLAlchemyError
 
 from data_models import User, Movie
 from datamanager.data_manager_interface import DataManagerInterface
 
+logger = logging.getLogger("sqlite_data_manager")
 
 class SQLiteDataManager(DataManagerInterface, ABC):
     def __init__(self, db):
@@ -23,6 +24,18 @@ class SQLiteDataManager(DataManagerInterface, ABC):
         users_query = self.db.session.query(User)
         return users_query.all()
 
+    def get_all_users_count(self):
+        """
+        Retrieves the count of all users from the database.
+        """
+        return self.db.session.query(User).count()
+
+    def get_all_movies_count(self):
+        """
+        Retrieves the count of all movies from the database.
+        """
+        return self.db.session.query(Movie).count()
+
     def get_user_movies(self, user_id: int):
         """
         Retrieves all user's movies.
@@ -30,7 +43,7 @@ class SQLiteDataManager(DataManagerInterface, ABC):
             user_id (int) search movies
         """
         movies_query = self.db.session.query(Movie).filter(Movie.user_id == user_id)
-        return movies_query.filter()
+        return movies_query.all()
 
     def add_user(self, user: User):
         """
@@ -47,7 +60,7 @@ class SQLiteDataManager(DataManagerInterface, ABC):
     def update_movie(self, movie: Movie):
         """Updates an existing movie, if found."""
         try:
-            existing_movie = self.db.session.query(Movie).filter(Movie.id == movie.id).first()
+            existing_movie = Movie.query.get(movie.id)
             if existing_movie:
                 existing_movie.name = movie.name
                 existing_movie.director = movie.director
@@ -56,19 +69,20 @@ class SQLiteDataManager(DataManagerInterface, ABC):
                 existing_movie.user_id = movie.user_id
                 self.db.session.commit()
             else:
-                Logger.error("Updated movie not found")
+                logger.error("Updated movie not found")
         except SQLAlchemyError as error:
-            Logger.error(f"Error updating a movie: {error}")
+            logger.error(f"Error updating a movie: {error}")
 
-    def delete_movie(self, movie_id):
+    def delete_movie(self, movie_id: int):
         """Deletes a movie"""
         try:
-            movie = self.db.session.query(Movie).filter(Movie.id == movie_id)
+            movie = Movie.query.get(movie_id)
             if movie:
                 self.db.session.delete(movie)
                 self.db.session.commit()
+                logger.info("Movie was deleted.")
             else:
-                Logger.error("Deleted movie not found")
+                logger.error("Deleted movie not found")
         except SQLAlchemyError as error:
             self.db.session.rollback()
-            Logger.error(f"Error deleting a movie: {error}")
+            logger.error(f"Error deleting a movie: {error}")

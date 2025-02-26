@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Add User - Moviweb{% endblock %}
+{% block header %}Add User{% endblock %}
+
+{% block content %}
+    <form action="{{ url_for('add_user') }}" method="post">
+        <label for="name">Name:</label>
+        <input id="name" name="name" type="text" required>
+        <br />
+        <br />
+        <input type="submit" value="Add">
+    </form>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Add Movie - Moviweb{% endblock %}
+{% block header %}Add Movie for {{ user.name }}{% endblock %}
+
+{% block content %}
+    {% include "_flash_messages.html" %}
+    <form action="{{ url_for('add_movie', user_id=user.id) }}" method="post">
+        <label for="name">Name:</label>
+        <input id="name" name="name" type="text" required>
+        <label for="director">Director:</label>
+        <input id="director" name="director" type="text">
+        <div class="year-container">
+            <label for="year" id="year-label">Year:</label>
+            <input id="year" name="year" type="number" min="1888">
+        </div>
+        <div class="rating-container">
+            <label for="rating" id="rating-label">Rating:</label>
+            <input id="rating" name="rating" type="text">
+        </div>
+        <br />
+        <br />
+        <input type="submit" value="Add">
+    </form>
+{% endblock %}
