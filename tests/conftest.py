@@ -2,7 +2,7 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from project.data_models import db
+from project.data_models import db, User, Movie
 
 
 @pytest.fixture(scope="session")
@@ -27,3 +27,25 @@ def session(engine, tables):
     yield session
     session.rollback()  # Rollback changes after test
     session.close()
+
+@pytest.fixture
+def test_user(session):
+    """Creates a test user added to the test session."""
+    user = User(name="test_user")
+    session.add(user)
+    session.commit()
+    return user
+
+@pytest.fixture
+def test_movie(session, test_user):
+    """Creates a test movie connected to test user"""
+    movie = Movie(
+        name="test_movie",
+        director="test_director",
+        year="1990",
+        rating="9.5",
+        user_id=test_user.id
+    )
+    session.add(movie)
+    session.commit()
+    return movie

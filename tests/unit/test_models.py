@@ -1,7 +1,7 @@
 from project.data_models import User, Movie
 from tests.conftest import session
 
-
+# TODO: extract the test user to a fixture
 def test_new_user(session):
     """
     GIVEN a User model
@@ -20,34 +20,22 @@ def test_new_user(session):
     assert db_user.name == user_name
     assert isinstance(db_user.id, int)
 
-
-def test_new_movie(session):
+# TODO: extract the test movie to a fixture
+def test_new_movie(session, test_movie):
     """
     GIVEN a Movie model
     WHEN a new Movie is created
     THEN check the movies attributes are defined correctly
     """
-    name = "Test Movie"
-    director = "Test Director"
-    year = 1980
-    rating = 10
-    user_id = 1
-
-    movie = Movie(
-        name=name,
-        director=director,
-        year=year,
-        rating=rating,
-        user_id=user_id
-    )
-    session.add(movie)
-    session.commit()
-
     # Verify movie data stored in db
-    db_movie = session.get(Movie, movie.id)
-    assert db_movie.id == 1
-    assert db_movie.director == director
-    assert db_movie.year == year
-    assert db_movie.rating == rating
+    db_movie = session.get(Movie, test_movie.id)
+    assert db_movie.director == test_movie.director
+    assert db_movie.year == test_movie.year
+    assert db_movie.rating == test_movie.rating
     assert isinstance(db_movie.user_id, int)
     assert isinstance(db_movie.user, User)
+    assert db_movie.user.id == test_movie.user_id
+    assert db_movie.user.name == test_movie.user.name
+
+# TODO: add more tests
+#  (column constraints, model relationships, user deletion deletes his movies...)
