@@ -1,11 +1,20 @@
+import json
 import logging
 import os
+from urllib.parse import urljoin, urlencode
 
+import requests
+from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for, flash, abort
 
-from project.data_models import db, Movie, User
 from data_manager.sqlite_data_manager import SQLiteDataManager
+from project.data_models import db, Movie, User
 from project.exceptions import DatabaseError, MovieNotFoundError
+from utils.validation import get_valid_number_or_none, get_valid_url_or_none
+
+load_dotenv()
+
+API_KEY = os.getenv("API_KEY")
 
 app = Flask(__name__)
 
@@ -18,6 +27,7 @@ logger = logging.getLogger("app")
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))  # Root directory
 DB_PATH = os.path.join(BASE_DIR, "data", "moviweb_app.db")  # Correct database location
 
+app.config['SECRET_KEY'] = os.getenv("FLASK_SECRET_KEY")
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_PATH}"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -25,6 +35,8 @@ db.init_app(app)
 
 data_manager = SQLiteDataManager(db)
 
+
+# OK
 @app.route('/')
 def home():
     users_count = data_manager.get_all_users_count()
@@ -32,19 +44,22 @@ def home():
     return render_template("index.html", users_count=users_count, movies_count=movies_count)
 
 
+# DONE
 @app.route("/users")
 def list_users():
     users = data_manager.get_all_users()
     return render_template("users.html", users=users)
 
 
+# DONE
 @app.route("/users/<int:user_id>")
 def user_movies(user_id: int):
     movies = data_manager.get_user_movies(user_id)
-    user = User.query.get_or_404(user_id, description="User not found!")
+    user = db.get_or_404(User, user_id, description="User not found!")
     return render_template("movies.html", movies=movies, user=user)
 
 
+# OK
 @app.route("/add_user", methods=["GET", "POST"])
 def add_user():
     if request.method == "POST":
@@ -62,48 +77,109 @@ def add_user():
     return render_template("add_user.html")
 
 
+def _load_movie(title: str) -> Movie | None:
+    new_movie = None
+    base_url = "https://www.omdbapi.com/"
+    params = {"apikey": API_KEY, "t": title, "type": "movie"}
+
+    response = requests.get(url=urljoin(base_url, "?" + urlencode(params)))
+    response_obj = json.loads(response.text)
+
+    if response.status_code == 200:
+        movie_was_found = eval(response_obj["Response"])
+
+        if movie_was_found:
+            new_title = response_obj["Title"]
+            new_director = response_obj["Director"]
+            new_year = get_valid_number_or_none(response_obj["Year"], int)
+            new_rating = get_valid_number_or_none(response_obj["imdbRating"], float)
+            new_poster_url = get_valid_url_or_none(response_obj["Poster"])
+
+            new_movie = Movie(
+                name=new_title,
+                director=new_director,
+                year=new_year,
+                rating=new_rating,
+                poster_url=new_poster_url
+            )
+
+        else:
+            logger.warning(response_obj["Error"])
+    else:
+        logger.error("Error: Accessing movie data failed, please try again later.")
+
+    return new_movie
+
+
+# add new movie with full details loaded tested
 @app.route("/users/<int:user_id>/add_movie", methods=["GET", "POST"])
 def add_movie(user_id: int):
+    user = User.query.get_or_404(user_id, description="User not found!")
+
     if request.method == "POST":
         movie_name = request.form.get("name").strip()
+
         if not movie_name:
             flash("Movie name is required")
-            return redirect(url_for("add_movie", user_id=user_id))
+            return redirect(url_for("add_movie", user=user, movie=None))
 
         movie_director = request.form.get("director").strip() or None
-        year_form_value = request.form.get("year") or None
-        rating_form_value = request.form.get("rating") or None
-
-        try:
-            movie_year = int(year_form_value) if year_form_value else None
-        except ValueError:
-            flash("Wrong year")
-            return redirect(url_for("add_movie", user_id=user_id))
-
-        try:
-            movie_rating = float(rating_form_value) if rating_form_value else None
-        except ValueError:
-            flash("Wrong rating")
-            return redirect(url_for("add_movie", user_id=user_id))
+        movie_year = get_valid_number_or_none(request.form.get("year").strip(), int)
+        movie_rating = get_valid_number_or_none(request.form.get("rating").strip(), float)
+        movie_poster_url = get_valid_url_or_none(request.form.get("poster_url").strip())
 
         new_movie = Movie(
             name=movie_name,
             director=movie_director,
             year=movie_year,
             rating=movie_rating,
-            user_id=user_id
+            poster_url=movie_poster_url
         )
+
         try:
-            data_manager.add_movie(new_movie)
+            user_movie_list = data_manager.get_user_movies(user_id)
+            this_user_movie = next(
+                (movie for movie in user_movie_list if movie.name == movie_name),
+                None
+            )
+            added_movie = data_manager.get_movie_by_title(movie_name)
+
+            if not added_movie:
+                data_manager.add_movie(new_movie)
+            else:
+                new_movie = added_movie
+
+            if not this_user_movie:
+                data_manager.add_movie_to_user(user_id, new_movie)
+            else:
+                flash("Movie is already in users list.")
+                return redirect(url_for("add_movie", user_id=user_id, movie=None))
+
         except DatabaseError as error:
             abort(500, description=str(error))
 
         return redirect(url_for("user_movies", user_id=user_id))
 
-    user = User.query.get_or_404(user_id, description="User not found!")
-    return render_template("add_movie.html", user=user)
+    # get (movie search)
+    title = request.args.get("title")
 
+    if title:
+        try:
+            fetched_movie = _load_movie(title)
+        except requests.exceptions.ConnectionError as error:
+            logger.error(f"Connection to omdb failed: {str(error)}")
+            flash("Searching online failed, please retry later.")
+            return render_template("add_movie.html", user=user, movie=None)
 
+        matching_movie = data_manager.get_movie_by_title(title) or fetched_movie
+        if not matching_movie:
+            flash(f"No movie was found.")
+
+        return render_template("add_movie.html", user=user, movie=matching_movie)
+
+    return render_template("add_movie.html", user=user, movie=None)
+
+# OK
 @app.route("/users/<int:user_id>/update_movie/<int:movie_id>", methods=["GET", "POST"])
 def update_movie(user_id: int, movie_id: int):
     updated_movie = Movie.query.get_or_404(movie_id, description="Movie not found, unable to update.")
@@ -111,39 +187,24 @@ def update_movie(user_id: int, movie_id: int):
 
     if request.method == "POST":
         # save the updated movie
-        new_name = request.form.get("name").strip()
-        if not new_name:
+        movie_name = request.form.get("name").strip()
+        if not movie_name:
             flash("Movie name is required")
-            return redirect(url_for("update_movie", user_id=movie_user.id, movie_id=movie_id))
+            return render_template("update_movie.html", user_id=user_id, movie=updated_movie)
 
-        updated_movie.name = new_name
-        updated_movie.director = request.form.get("director").strip() or None
+        movie_director = request.form.get("director").strip() or None
+        movie_year = get_valid_number_or_none(request.form.get("year").strip(), int)
+        movie_rating = get_valid_number_or_none(request.form.get("rating").strip(), float)
+        movie_poster_url = get_valid_url_or_none(request.form.get("poster_url").strip())
 
-        year_form_value = request.form.get("year") or None
-        rating_form_value = request.form.get("rating") or None
-        user_id_form_value = request.form.get("user")
-
-        try:
-            new_year = int(year_form_value) if year_form_value else None
-        except ValueError:
-            flash("Wrong year")
-            return redirect(url_for("update_movie", user_id=movie_user.id, movie_id=movie_id))
-
-        try:
-            new_rating = float(rating_form_value) if rating_form_value else None
-        except ValueError:
-            flash("Wrong rating")
-            return redirect(url_for("update_movie", user_id=movie_user.id, movie_id=movie_id))
-
-        try:
-            new_user_id = int(user_id_form_value)
-        except ValueError:
-            flash("Wrong user")
-            return redirect(url_for("update_movie", user_id=movie_user.id, movie_id=movie_id))
-
-        updated_movie.year = new_year
-        updated_movie.rating = new_rating
-        updated_movie.user_id = new_user_id
+        updated_movie = Movie(
+            id=movie_id,
+            name=movie_name,
+            director=movie_director,
+            year=movie_year,
+            rating=movie_rating,
+            poster_url=movie_poster_url
+        )
 
         try:
             data_manager.update_movie(updated_movie)
@@ -152,22 +213,17 @@ def update_movie(user_id: int, movie_id: int):
 
         return redirect(url_for("user_movies", user_id=movie_user.id))
 
-    all_users = data_manager.get_all_users()
-    return render_template("update_movie.html", movie=updated_movie, users=all_users)
+    return render_template("update_movie.html", user_id=user_id, movie=updated_movie)
 
-
+# OK
 @app.route("/users/<int:user_id>/delete_movie/<int:movie_id>")
 def delete_movie(user_id: int, movie_id: int):
     try:
         data_manager.delete_movie(movie_id)
-        user = User.query.get_or_404(user_id, description="Associated user not found, unable to delete the movie.")
     except MovieNotFoundError as error:
         abort(404, description=str(error))
     except DatabaseError as error:
         abort(500, description=str(error))
-
-    if not user:
-        return redirect(url_for("list_users"))
 
     return redirect(url_for("user_movies", user_id=user_id))
 

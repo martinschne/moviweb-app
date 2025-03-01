@@ -25,9 +25,10 @@ class Movie(db.Model):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(nullable=False)
-    director: Mapped[str] = mapped_column()
-    year: Mapped[int] = mapped_column()
-    rating: Mapped[float] = mapped_column()
+    director: Mapped[str] = mapped_column(nullable=True)
+    year: Mapped[int] = mapped_column(nullable=True)
+    rating: Mapped[float] = mapped_column(nullable=True)
+    poster_url: Mapped[str] = mapped_column(nullable=True)
     user_movies: Mapped[list["UserMovie"]] = relationship("UserMovie", back_populates="movie",
                                                           cascade="all, delete-orphan")
 

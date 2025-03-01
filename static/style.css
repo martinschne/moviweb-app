@@ -121,6 +121,10 @@ form select {
     flex-direction: column;
 }
 
+.flash-message {
+    text-align: center
+}
+
 input:focus, select:focus {
     outline: none;
 }

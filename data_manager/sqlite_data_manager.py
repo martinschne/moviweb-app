@@ -1,10 +1,11 @@
 import logging
 from abc import ABC
 
+from sqlalchemy import update
 from sqlalchemy.exc import SQLAlchemyError
 
-from project.data_models import User, Movie
 from data_manager.data_manager_interface import DataManagerInterface
+from project.data_models import User, Movie, UserMovie
 from project.exceptions import MovieNotFoundError, DatabaseError
 
 logger = logging.getLogger("sqlite_data_manager")
@@ -43,8 +44,11 @@ class SQLiteDataManager(DataManagerInterface, ABC):
         Args:
             user_id (int) search movies
         """
-        movies_query = self.db.session.query(Movie).filter(Movie.user_id == user_id)
-        return movies_query.all()
+        movies = self.db.session.execute(
+            self.db.select(Movie).join(UserMovie).filter(UserMovie.user_id == user_id)
+        ).scalars().all()
+
+        return movies
 
     def add_user(self, user: User):
         """
@@ -72,15 +76,33 @@ class SQLiteDataManager(DataManagerInterface, ABC):
             logger.error(error_message)
             raise DatabaseError("Adding movie failed.") from error
 
+    def add_movie_to_user(self, user_id: int, movie: Movie):
+        """Assigns a movie to an existing user"""
+        try:
+            new_user_movie = UserMovie(
+                user_id=user_id,
+                movie_id=movie.id
+            )
+            self.db.session.add(new_user_movie)
+            self.db.session.commit()
+            logger.info(f"Movie with ID: {movie.id} was assigned to user with ID: {user_id}.")
+        except SQLAlchemyError as error:
+            self.db.session.rollback()
+            error_message = f"Database error: {str(error)}"
+            logger.error(error_message)
+            raise DatabaseError("Assigning movie to a user failed.") from error
+
     def update_movie(self, movie: Movie):
         """Updates an existing movie, if found."""
-        existing_movie = Movie.query.get(movie.id)
-        existing_movie.name = movie.name
-        existing_movie.director = movie.director
-        existing_movie.year = movie.year
-        existing_movie.rating = movie.rating
-        existing_movie.user_id = movie.user_id
         try:
+            stmt = update(Movie).where(Movie.id == movie.id).values(
+                name=movie.name,
+                director=movie.director,
+                year=movie.year,
+                rating=movie.rating,
+                poster_url=movie.poster_url
+            )
+            self.db.session.execute(stmt)
             self.db.session.commit()
             logger.info("Movie was updated.")
         except SQLAlchemyError as error:
@@ -102,8 +124,14 @@ class SQLiteDataManager(DataManagerInterface, ABC):
                 error_message = f"Database error: {str(error)}"
                 logger.error(error_message)
                 raise DatabaseError("Deleting movie failed.") from error
-
         else:
             error_message = f"Movie to delete with ID: {movie_id} not found."
             logger.error(error_message)
             raise MovieNotFoundError(error_message)
+
+    def get_movie_by_title(self, title: str) -> Movie | None:
+        movie = self.db.session.execute(
+            self.db.select(Movie).filter(Movie.name.ilike(f"%{title}%"))
+        ).scalars().first()
+
+        return movie

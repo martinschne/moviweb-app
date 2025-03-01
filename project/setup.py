@@ -14,12 +14,53 @@ def populate_db():
     db.session.add_all([martin, lucy])
 
     # create movies
-    schindlers_list_movie = Movie(name="Schindler's list", director="Steven Spielberg", year=1993, rating=9.0)
-    interstellar_movie = Movie(name="Interstellar", director="Christopher Nolan", year=2014, rating=8.7)
-    gladiator_movie = Movie(name="Gladiator", director="Ridley Scott", year=2000, rating=8.5)
-    matrix_movie = Movie(name="The Matrix", director="Lana & Lilly Wachowski", year=1999, rating=8.7)
-    shawshank_redemption_movie = Movie(name="The Shawshank Redemption", director="Frank Darabont", year=1994, rating=9.3)
-    whiplash_movie = Movie(name="Whiplash", director="Damien Chazelle", year=2014, rating=8.5)
+    schindlers_list_movie = Movie(
+        name="Schindler's list",
+        director="Steven Spielberg",
+        year=1993,
+        rating=9.0,
+        poster_url="https://m.media-amazon.com/images/M/MV5BNjM1ZDQxYWUtMzQyZS00MTE1LWJmZGYtNGUyNTdlYjM3ZmVmXkEyXkFqcGc@._V1_SX300.jpg"
+    )
+
+    interstellar_movie = Movie(
+        name="Interstellar",
+        director="Christopher Nolan",
+        year=2014,
+        rating=8.7,
+        poster_url="https://m.media-amazon.com/images/M/MV5BYzdjMDAxZGItMjI2My00ODA1LTlkNzItOWFjMDU5ZDJlYWY3XkEyXkFqcGc@._V1_SX300.jpg"
+    )
+
+    gladiator_movie = Movie(
+        name="Gladiator",
+        director="Ridley Scott",
+        year=2000,
+        rating=8.5,
+        poster_url="https://m.media-amazon.com/images/M/MV5BYWQ4YmNjYjEtOWE1Zi00Y2U4LWI4NTAtMTU0MjkxNWQ1ZmJiXkEyXkFqcGc@._V1_SX300.jpg"
+    )
+
+    matrix_movie = Movie(
+        name="The Matrix",
+        director="Lana & Lilly Wachowski",
+        year=1999,
+        rating=8.7,
+        poster_url="https://m.media-amazon.com/images/M/MV5BN2NmN2VhMTQtMDNiOS00NDlhLTliMjgtODE2ZTY0ODQyNDRhXkEyXkFqcGc@._V1_SX300.jpg"
+    )
+
+    shawshank_redemption_movie = Movie(
+        name="The Shawshank Redemption",
+        director="Frank Darabont",
+        year=1994,
+        rating=9.3,
+        poster_url="https://m.media-amazon.com/images/M/MV5BMDAyY2FhYjctNDc5OS00MDNlLThiMGUtY2UxYWVkNGY2ZjljXkEyXkFqcGc@._V1_SX300.jpg"
+    )
+
+    whiplash_movie = Movie(
+        name="Whiplash",
+        director="Damien Chazelle",
+        year=2014,
+        rating=8.5,
+        poster_url="https://m.media-amazon.com/images/M/MV5BMDFjOWFkYzktYzhhMC00NmYyLTkwY2EtYjViMDhmNzg0OGFkXkEyXkFqcGc@._V1_SX300.jpg"
+    )
 
     db.session.add_all([
         schindlers_list_movie,
