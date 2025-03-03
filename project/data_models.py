@@ -9,7 +9,7 @@ class User(db.Model):
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(nullable=False)
+    name: Mapped[str] = mapped_column(nullable=False, unique=True)
     user_movies: Mapped[list["UserMovie"]] = relationship("UserMovie", back_populates="user",
                                                           cascade="all, delete-orphan")
 
@@ -24,7 +24,7 @@ class Movie(db.Model):
     __tablename__ = "movies"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(nullable=False)
+    name: Mapped[str] = mapped_column(nullable=False, unique=True)
     director: Mapped[str] = mapped_column(nullable=True)
     year: Mapped[int] = mapped_column(nullable=True)
     rating: Mapped[float] = mapped_column(nullable=True)

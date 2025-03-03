@@ -36,7 +36,6 @@ db.init_app(app)
 data_manager = SQLiteDataManager(db)
 
 
-# OK
 @app.route('/')
 def home():
     users_count = data_manager.get_all_users_count()
@@ -44,14 +43,12 @@ def home():
     return render_template("index.html", users_count=users_count, movies_count=movies_count)
 
 
-# DONE
 @app.route("/users")
 def list_users():
     users = data_manager.get_all_users()
     return render_template("users.html", users=users)
 
 
-# DONE
 @app.route("/users/<int:user_id>")
 def user_movies(user_id: int):
     movies = data_manager.get_user_movies(user_id)
@@ -59,7 +56,6 @@ def user_movies(user_id: int):
     return render_template("movies.html", movies=movies, user=user)
 
 
-# OK
 @app.route("/add_user", methods=["GET", "POST"])
 def add_user():
     if request.method == "POST":
@@ -111,7 +107,6 @@ def _load_movie(title: str) -> Movie | None:
     return new_movie
 
 
-# add new movie with full details loaded tested
 @app.route("/users/<int:user_id>/add_movie", methods=["GET", "POST"])
 def add_movie(user_id: int):
     user = User.query.get_or_404(user_id, description="User not found!")
@@ -179,7 +174,7 @@ def add_movie(user_id: int):
 
     return render_template("add_movie.html", user=user, movie=None)
 
-# OK
+
 @app.route("/users/<int:user_id>/update_movie/<int:movie_id>", methods=["GET", "POST"])
 def update_movie(user_id: int, movie_id: int):
     updated_movie = Movie.query.get_or_404(movie_id, description="Movie not found, unable to update.")
@@ -215,7 +210,7 @@ def update_movie(user_id: int, movie_id: int):
 
     return render_template("update_movie.html", user_id=user_id, movie=updated_movie)
 
-# OK
+
 @app.route("/users/<int:user_id>/delete_movie/<int:movie_id>")
 def delete_movie(user_id: int, movie_id: int):
     try:

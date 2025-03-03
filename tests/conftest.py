@@ -6,46 +6,29 @@ from project.data_models import db, User, Movie
 
 
 @pytest.fixture(scope="session")
-def engine():
-    """Create a new database engine for testing."""
-    return create_engine("sqlite:///:memory:")
-
-
-@pytest.fixture(scope="session")
-def tables(engine):
-    """Create all tables before tests run and drop them after."""
-    db.metadata.create_all(engine)
-    yield
-    db.metadata.drop_all(engine)
-
-
-@pytest.fixture
-def session(engine, tables):
-    """Creates a new database session for each test."""
+def session():
+    engine = create_engine('sqlite:///:memory:')
     Session = sessionmaker(bind=engine)
+    db.metadata.create_all(engine)  # This creates the schema with the constraints
     session = Session()
     yield session
-    session.rollback()  # Rollback changes after test
+    session.rollback()
     session.close()
 
-@pytest.fixture
-def test_user(session):
-    """Creates a test user added to the test session."""
-    user = User(name="test_user")
-    session.add(user)
-    session.commit()
-    return user
 
 @pytest.fixture
-def test_movie(session, test_user):
+def test_user():
+    """Creates a test user added to the test session."""
+    return User(name="test_user")
+
+
+@pytest.fixture
+def test_movie():
     """Creates a test movie connected to test user"""
-    movie = Movie(
+    return Movie(
         name="test_movie",
         director="test_director",
-        year="1990",
-        rating="9.5",
-        user_id=test_user.id
+        year=1990,
+        rating=9.5,
+        poster_url="https://example.com"
     )
-    session.add(movie)
-    session.commit()
-    return movie

@@ -51,6 +51,7 @@ def get_valid_url_or_none(url: str) -> str | None:
         None
     """
     parsed_url = urlparse(url)
-    if parsed_url.scheme and parsed_url.netloc:
+    is_valid_scheme = parsed_url.scheme == "http" or parsed_url.scheme == "https"
+    if parsed_url.scheme and is_valid_scheme and parsed_url.netloc:
         return url
     return None
