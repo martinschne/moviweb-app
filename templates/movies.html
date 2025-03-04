@@ -5,9 +5,11 @@
 
 {% block content %}
     {% if not movies %}
-    <p class="missing-data-warning">This user has no movies assigned.</p>
+        <div class="container has-text-centered">
+            <p class="missing-data-warning">This user has no movies assigned.</p>
+        </div>
     {% else %}
-        <table>
+        <table class="table is-bordered">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -25,14 +27,24 @@
                         <td>{{ movie.year or "-" }}</td>
                         <td>{{ movie.rating or "-" }}</td>
                         <td>
-                            <a href="{{ url_for('update_movie', user_id=user.id, movie_id=movie.id) }}">Update</a>
+                            <a href="{{ url_for('update_movie', user_id=user.id, movie_id=movie.id) }}"
+                               class="has-text-success">
+                                Update
+                            </a>
                             <a href="{{ url_for('delete_movie', user_id=user.id, movie_id=movie.id) }}"
-                               onclick="return confirm('Are you sure?');">Delete</a>
+                               class="has-text-danger"
+                               onclick="return confirm('Are you sure?');">
+                                Delete
+                            </a>
                         </td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
     {% endif %}
-    <a href="{{ url_for('add_movie', user_id=user.id) }}" class="action-button">Add Movie</a>
+    <div class="container p-5 has-text-centered">
+        <a href="{{ url_for('add_movie', user_id=user.id) }}" class="button is-primary is-full-width-mobile">
+            Add movie
+        </a>
+    </div>
 {% endblock %}

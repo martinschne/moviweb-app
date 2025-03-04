@@ -1,0 +1,11 @@
+@media screen and (max-width: 768px) {
+    .button.is-fullwidth-mobile {
+        display: flex;
+        width: 100%;
+    }
+}
+
+.cell {
+    width: 128px;
+    margin: 0 auto;
+}

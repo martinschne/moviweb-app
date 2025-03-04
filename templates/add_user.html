@@ -4,11 +4,11 @@
 {% block header %}Add User{% endblock %}
 
 {% block content %}
-    <form action="{{ url_for('add_user') }}" method="post">
-        <label for="name">Name:</label>
-        <input id="name" name="name" type="text" required>
-        <br />
-        <br />
-        <input type="submit" value="Add">
-    </form>
+    {% set action_url = url_for('add_user') %}
+    {% set form_method = 'post' %}
+    {% set input_identifier = 'name' %}
+    {% set input_placeholder = 'Enter your name' %}
+    {% set submit_button_value = 'Add' %}
+
+    {% include 'add_form.html' %}
 {% endblock %}

@@ -1,0 +1,19 @@
+<div class="columns is-mobile is-centered">
+    <div class="column is-two-fifths">
+        <form action="{{ action_url }}" method="{{ form_method }}">
+            <div class="field has-addons">
+                <div class="control is-expanded">
+                    <input class="input"
+                           type="text"
+                           id="{{ input_identifier }}"
+                           name="{{ input_identifier }}"
+                           placeholder="{{ input_placeholder }}"
+                           required>
+                </div>
+                <div class="control">
+                    <input class="button is-primary" type="submit" value="{{ submit_button_value }}">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
