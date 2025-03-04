@@ -11,26 +11,23 @@
             {% else %}
                 <div class="grid is-col-min-8">
                     {% for user in users %}
-                    <div class="cell">
-                        <div class="content">
-                            <div class="card-image is-full-width py-4">
-                                <figure class="image is-1by1">
-                                  <img class="is-rounded" src="https://ui-avatars.com/api/?background=random&size=256&
-                                  rounded=true&format=svg&name={{ user.name }}"
-                                       alt="{{ user.name }}' user avatar"
-                                  />
-                                </figure>
-                            </div>
-                            <header class="card-header">
-                                <p class="card-header-title is-centered">{{ user.name }}</p>
-                            </header>
-                            <div class="card-content">
-                                <div class="content has-text-centered">
-                                     <a href="{{ url_for('user_movies', user_id=user['id']) }}">Show movies</a>
+                        <div class="cell">
+                            <a href="{{ url_for('user_movies', user_id=user['id']) }}">
+                                <div class="content">
+                                    <div class="card-image is-full-width py-4 avatar">
+                                        <figure class="image is-1by1">
+                                            <img class="is-rounded" src="https://ui-avatars.com/api/?background=random&size=256&
+                                      rounded=true&format=svg&name={{ user.name }}"
+                                                 alt="{{ user.name }}' user avatar"
+                                            />
+                                        </figure>
+                                    </div>
+                                    <header class="card-header">
+                                        <p class="card-header-title is-centered">{{ user.name }}</p>
+                                    </header>
                                 </div>
-                            </div>
+                            </a>
                         </div>
-                    </div>
                     {% endfor %}
                 </div>
             {% endif %}

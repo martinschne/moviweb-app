@@ -9,3 +9,14 @@
     width: 128px;
     margin: 0 auto;
 }
+
+.avatar {
+    width: 99%;
+    transition: width 0.7s;
+    filter: brightness(1)
+}
+
+.avatar:hover {
+    transform: scale(1.025, 1.025);
+    filter: brightness(1.1)
+}
