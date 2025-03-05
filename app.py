@@ -9,7 +9,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, abo
 
 from data_manager.sqlite_data_manager import SQLiteDataManager
 from project.data_models import db, Movie, User
-from project.exceptions import DatabaseError, MovieNotFoundError
+from project.exceptions import DatabaseError, MovieNotFoundError, UserNotUniqueError
 from utils.validation import get_valid_number_or_none, get_valid_url_or_none
 
 load_dotenv()
@@ -65,6 +65,9 @@ def add_user():
         else:
             try:
                 data_manager.add_user(User(name=new_user_name))
+            except UserNotUniqueError:
+                flash("User already exists. Choose other name.")
+                return render_template("add_user.html")
             except DatabaseError as error:
                 abort(500, description=str(error))
 
@@ -168,7 +171,7 @@ def add_movie(user_id: int):
 
         matching_movie = data_manager.get_movie_by_title(title) or fetched_movie
         if not matching_movie:
-            flash(f"No movie was found.")
+            flash(f"No movie found. Try a different search.")
 
         return render_template("add_movie.html", user=user, movie=matching_movie)
 

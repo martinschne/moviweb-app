@@ -4,11 +4,9 @@
 {% block header %}Welcome to Moviweb{% endblock %}
 
 {% block content %}
-    <div class="columns is-mobile is-centered has-text-centered">
-        <div class="column is-half">
-            <span class="subtitle">{{ users_count }} users</span>
-            <br>
-            <span class="subtitle">{{ movies_count }} movies</span>
-        </div>
+    <div class="container has-text-centered">
+        <span class="subtitle">{{ users_count }} users</span>
+        <br>
+        <span class="subtitle">{{ movies_count }} movies</span>
     </div>
 {% endblock %}

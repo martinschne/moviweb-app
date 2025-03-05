@@ -4,37 +4,37 @@
 {% block header %}Users{% endblock %}
 
 {% block content %}
-    <div class="columns is-centered">
-        <div class="column">
-            {% if not users %}
-            <p>No users were found, please add one first.</p>
-            {% else %}
-                <div class="grid is-col-min-8">
-                    {% for user in users %}
-                        <div class="cell">
-                            <a href="{{ url_for('user_movies', user_id=user['id']) }}">
-                                <div class="content">
-                                    <div class="card-image is-full-width py-4 avatar">
-                                        <figure class="image is-1by1">
-                                            <img class="is-rounded" src="https://ui-avatars.com/api/?background=random&size=256&
-                                      rounded=true&format=svg&name={{ user.name }}"
-                                                 alt="{{ user.name }}' user avatar"
-                                            />
-                                        </figure>
-                                    </div>
-                                    <header class="card-header">
-                                        <p class="card-header-title is-centered">{{ user.name }}</p>
-                                    </header>
-                                </div>
-                            </a>
+    {% if not users %}
+    <p>No users were found, please add one first.</p>
+    {% else %}
+    <div class="is-flex is-justify-content-center">
+        <div class="columns is-multiline">
+            {% for user in users %}
+            <div class="column is-one-quarter-desktop is-one-third-tablet column-item">
+                <a href="{{ url_for('user_movies', user_id=user['id']) }}">
+                    <div class="user-card">
+                        <div class="card-image avatar is-full-width py-4">
+                            <figure class="image is-1by1">
+                                <img class="is-rounded"
+                                     src="https://ui-avatars.com/api/?background=random&size=256&rounded=true&
+                                         format=svg&name={{ user.name }}"
+                                     alt="{{ user.name }}' user avatar"
+                                />
+                            </figure>
                         </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-            <div class="container p-5 has-text-centered">
-                <a class="button is-primary is-fullwidth-mobile"
-                   href="{{ url_for('add_user') }}">Add new user</a>
+                        <header class="card-header">
+                            <p class="card-header-title is-centered">{{ user.name }}</p>
+                        </header>
+                    </div>
+                </a>
             </div>
+            {% endfor %}
         </div>
+    </div>
+    {% endif %}
+    <div class="container button-container p-5 has-text-centered">
+        <a class="button is-primary is-fullwidth-mobile" href="{{ url_for('add_user') }}">
+            Add user
+        </a>
     </div>
 {% endblock %}

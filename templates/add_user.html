@@ -11,4 +11,9 @@
     {% set submit_button_value = 'Add' %}
 
     {% include 'add_form.html' %}
+    <div class="container has-text-centered">
+        <p class="has-text-danger mt-3">
+            {% include "_flash_messages.html" %}
+        </p>
+    </div>
 {% endblock %}

@@ -5,9 +5,39 @@
     }
 }
 
-.cell {
+.column-item {
+    min-width: fit-content !important;
+}
+
+.notification-container {
+    position: fixed;
+    top: 5rem;
+    right: 1rem;
+    z-index: 1000;
+    width: 300px;
+}
+
+.button-container {
+    margin-top: 2rem;
+    display: block;
+    width: 100%;
+}
+
+.user-card {
     width: 128px;
     margin: 0 auto;
+}
+
+.movie-card {
+    width: 256px;
+    margin: 0 auto;
+    position: relative;
+    bottom: 0;
+    transition: bottom 0.5s;
+}
+
+.movie-card:hover {
+    bottom: 1rem;
 }
 
 .avatar {
@@ -19,4 +49,10 @@
 .avatar:hover {
     transform: scale(1.025, 1.025);
     filter: brightness(1.1)
+}
+
+.fixed-image {
+    width: auto;
+    height: 384px;
+    object-fit: cover;
 }

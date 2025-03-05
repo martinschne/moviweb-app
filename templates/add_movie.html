@@ -4,7 +4,6 @@
 {% block header %}Add Movie for {{ user.name }}{% endblock %}
 
 {% block content %}
-    {% include "_flash_messages.html" %}
     {% if not movie %}
         {% set action_url = url_for('add_movie', user_id=user.id) %}
         {% set form_method = 'get' %}
@@ -13,10 +12,16 @@
         {% set submit_button_value = 'Search' %}
 
         {% include 'add_form.html' %}
+        <div class="container has-text-centered">
+            <p class="has-text-danger mt-3">
+                {% include "_flash_messages.html" %}
+            </p>
+        </div>
     {% else %}
         {% set action_url = url_for('add_movie', user_id=user.id) %}
         {% set submit_button_value = 'Add' %}
 
         {% include 'movie_form.html' %}
     {% endif %}
+
 {% endblock %}

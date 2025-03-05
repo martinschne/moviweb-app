@@ -2,11 +2,11 @@ import logging
 from abc import ABC
 
 from sqlalchemy import update
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
 from data_manager.data_manager_interface import DataManagerInterface
 from project.data_models import User, Movie, UserMovie
-from project.exceptions import MovieNotFoundError, DatabaseError
+from project.exceptions import MovieNotFoundError, DatabaseError, UserNotUniqueError
 
 logger = logging.getLogger("sqlite_data_manager")
 
@@ -58,6 +58,11 @@ class SQLiteDataManager(DataManagerInterface, ABC):
             self.db.session.add(user)
             self.db.session.commit()
             logger.info("New user was added to the database.")
+        except IntegrityError as error:
+            self.db.session.rollback()
+            error_message = f"Integrity error: {str(error)}"
+            logger.error(error_message)
+            raise UserNotUniqueError("User already exists.") from error
         except SQLAlchemyError as error:
             self.db.session.rollback()
             error_message = f"Database error: {str(error)}"
