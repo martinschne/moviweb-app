@@ -52,7 +52,7 @@
 }
 
 .fixed-image {
-    width: auto;
+    width: 100%;
     height: 384px;
     object-fit: cover;
 }
