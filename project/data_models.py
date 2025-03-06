@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 db = SQLAlchemy()
@@ -44,7 +44,7 @@ class UserMovie(db.Model):
 
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), primary_key=True)
     movie_id: Mapped[int] = mapped_column(ForeignKey("movies.id"), primary_key=True)
-    review: Mapped[str] = mapped_column(nullable=True)
+    user_note: Mapped[str] = mapped_column(String(120), nullable=True)
     user: Mapped["User"] = relationship("User", back_populates="user_movies")
     movie: Mapped["Movie"] = relationship("Movie", back_populates="user_movies")
 

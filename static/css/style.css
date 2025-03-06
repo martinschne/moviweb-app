@@ -49,6 +49,14 @@
     border-bottom-left-radius: var(--bulma-box-radius) !important;
 }
 
+.modal-movie-card {
+    height: 100%;
+}
+
+#note-textarea {
+    resize: none;
+}
+
 .avatar {
     width: 99%;
     transition: width 0.7s;

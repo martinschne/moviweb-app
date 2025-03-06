@@ -2,47 +2,73 @@
     <div class="modal-background"></div>
     <div class="modal-content p-5">
         <div class="box movie-detail">
-            <article class="media">
+            <article class="media modal-movie-card">
                 <div class="media-left is-hidden-mobile">
                     <figure class="image">
                         <img class="modal-movie-poster">
                     </figure>
                 </div>
-                <div class="media-content py-5 pl-3 pr-5">
-                    <div class="container is-flex is-flex-direction-column" style="height: 400px;">
+                <div class="media-content py-5 pr-3">
+                    <div class="container is-flex is-flex-direction-column">
                         <div class="content">
                             <p class="title mb-5" id="movie-title">Title</p>
                             <div class="icon-text mb-3">
                                 <span class="icon">
                                     <i class="bx bxs-camera-movie"></i>
                                 </span>
-                                <span><p class="subtitle" id="movie-director">Director</p></span>
+                                <span><p id="movie-director">Director</p></span>
                             </div>
                             <div class="icon-text mb-3">
                                 <span class="icon">
                                     <i class="bx bxs-time"></i>
                                 </span>
-                                <span><p class="subtitle" id="movie-year">Year</p></span>
+                                <span><p id="movie-year">Year</p></span>
                             </div>
                             <div class="icon-text">
                                 <span class="icon">
                                     <i class="bx bxs-star"></i>
                                 </span>
-                                <span><p class="subtitle" id="movie-rating">Rating</p></span>
+                                <span><p id="movie-rating">Rating</p></span>
                             </div>
                         </div>
                         <section class="card-footer">
-                            <a href="" class="card-footer-item button has-text-success" id="update-movie-button">
+                            <a href="" class="button card-footer-item has-text-success" id="update-movie-button">
                                 Update
                             </a>
-                            <a href="#" class="card-footer-item button has-text-danger" id="delete-movie-button"
+                            <a href="#" class="button card-footer-item has-text-danger" id="delete-movie-button"
                                onclick="return confirm('Are you sure?');">
                                 Delete
                             </a>
                         </section>
                         <article class="content mt-5">
-                            <p class="subtitle has-text-weight-bold" id="movie-review-title">Review</p>
-                            <p>This movie was good</p>
+                            <p class="has-text-weight-bold" id="movie-review-title">Review</p>
+                            <section id="note-section" class="container">
+                                <p id="note-text">No review was added yet.</p>
+                                <a class="edit-note-button button is-small has-text-primary">Edit Review</a>
+                            </section>
+                            <section id="no-note-section" class="container">
+                                <p>No review was added yet.</p>
+                                <a class="add-note-button button is-small has-text-primary">Add Review</a>
+                            </section>
+                            <section id="add-note-section" class="container">
+                                <form class="form" id="add-note-form" method="post">
+                                    <div class="field">
+                                        <div class="control note-control">
+                                              <textarea id="note-textarea"
+                                                        class="textarea is-small"
+                                                        name="note"
+                                                        rows="3"
+                                                        maxlength="120"
+                                                        value=""></textarea>
+                                        </div>
+                                    </div>
+                                    <button id="save-note-button"
+                                            class="button has-text-primary is-small"
+                                            type="submit">
+                                        Save Note
+                                    </button>
+                                </form>
+                            </section>
                         </article>
                     </div>
                 </div>

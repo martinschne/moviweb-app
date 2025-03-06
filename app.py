@@ -1,11 +1,12 @@
 import json
 import logging
 import os
+from doctest import debug_script
 from urllib.parse import urljoin, urlencode
 
 import requests
 from dotenv import load_dotenv
-from flask import Flask, render_template, request, redirect, url_for, flash, abort
+from flask import Flask, render_template, request, redirect, url_for, flash, abort, jsonify
 
 from data_manager.sqlite_data_manager import SQLiteDataManager
 from project.data_models import db, Movie, User
@@ -53,6 +54,7 @@ def list_users():
 def user_movies(user_id: int):
     movies = data_manager.get_user_movies(user_id)
     user = db.get_or_404(User, user_id, description="User not found!")
+    # Note - add notes to the movies
     return render_template("movies.html", movies=movies, user=user)
 
 
@@ -224,6 +226,17 @@ def delete_movie(user_id: int, movie_id: int):
         abort(500, description=str(error))
 
     return redirect(url_for("user_movies", user_id=user_id))
+
+
+@app.route("/users/<int:user_id>/add_note/<int:movie_id>", methods=["POST"])
+def add_note(user_id: int, movie_id: int):
+    note = request.form.get("note").strip()
+    try:
+        data_manager.add_user_movie_note(user_id, movie_id, note)
+    except DatabaseError as error:
+        abort(500, description=str(error))
+
+    return jsonify(success=True, note=note), 200
 
 
 @app.errorhandler(404)

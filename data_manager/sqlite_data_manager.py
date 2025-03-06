@@ -140,3 +140,18 @@ class SQLiteDataManager(DataManagerInterface, ABC):
         ).scalars().first()
 
         return movie
+
+    def add_user_movie_note(self, user_id: int, movie_id: int, user_note: str):
+        try:
+            user_movie = self.db.session.execute(
+                self.db.select(UserMovie).filter(UserMovie.user_id == user_id, UserMovie.movie_id == movie_id)
+            ).scalars().first()
+            user_movie.user_note = user_note
+
+            self.db.session.commit()
+            logger.info(f"Note was saved for movie with ID: {movie_id} by user with ID: {user_id}.")
+        except SQLAlchemyError as error:
+            self.db.session.rollback()
+            error_message = f"Database error: {str(error)}"
+            logger.error(error_message)
+            raise DatabaseError("Saving note failed.") from error
