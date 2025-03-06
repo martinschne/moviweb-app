@@ -40,6 +40,15 @@
     bottom: 1rem;
 }
 
+.movie-detail {
+    padding: 0 !important;
+}
+
+.modal-movie-poster {
+    border-top-left-radius: var(--bulma-box-radius) !important;
+    border-bottom-left-radius: var(--bulma-box-radius) !important;
+}
+
 .avatar {
     width: 99%;
     transition: width 0.7s;

@@ -5,12 +5,14 @@
 
 {% block content %}
     {% if not users %}
-    <p>No users were found, please add one first.</p>
+    <div class="container has-text-centered">
+        <p class="subtitle">No users were found, please add one first.</p>
+    </div>
     {% else %}
     <div class="is-flex is-justify-content-center">
         <div class="columns is-multiline">
             {% for user in users %}
-            <div class="column is-one-quarter-desktop is-one-third-tablet column-item">
+            <div class="column is-one-fifth-desktop is-one-third-tablet column-item">
                 <a href="{{ url_for('user_movies', user_id=user['id']) }}">
                     <div class="user-card">
                         <div class="card-image avatar is-full-width py-4">

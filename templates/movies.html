@@ -6,7 +6,7 @@
 {% block content %}
     {% if not movies %}
     <div class="container has-text-centered">
-        <p>This user has no movies assigned.</p>
+        <p class="subtitle">This user has no movies assigned.</p>
     </div>
     {% else %}
     <div class="is-flex is-justify-content-center">
@@ -14,37 +14,37 @@
             {% for movie in movies %}
             <div class="column is-2-desktop is-2-tablet column-item">
                 <div class="card movie-card">
-                    <div class="is-clickable">
+                    <a class="is-clickable js-modal-trigger"
+                       data-movie-title="{{ movie.name }}"
+                       data-movie-director="{{ movie.director }}"
+                       data-movie-year="{{ movie.year }}"
+                       data-movie-rating="{{ movie.rating }}"
+                       data-movie-poster-url="{{ movie.poster_url }}"
+                       data-movie-user="{{ user.name }}"
+                       data-user-id="{{ user.id }}"
+                       data-movie-id="{{ movie.id }}"
+                       data-target="movie-modal">
                         <div class="card-image">
                                 <img src="{{ movie.poster_url or 'https://placehold.co/300x444?text=No%0APoster' }}"
                                      alt="{{ movie.name }} - movie poster"
                                      class="fixed-image"
                                 />
                         </div>
-                    </div>
+                    </a>
                     <header class="card-header">
                         <p class="card-header-title is-centered">{{ movie.name }}</p>
                     </header>
-                    <footer class="card-footer">
-                        <a href="{{ url_for('update_movie', user_id=user.id, movie_id=movie.id) }}"
-                           class="card-footer-item has-text-success">
-                            Update
-                        </a>
-                        <a href="{{ url_for('delete_movie', user_id=user.id, movie_id=movie.id) }}"
-                           class="card-footer-item has-text-danger"
-                           onclick="return confirm('Are you sure?');">
-                            Delete
-                        </a>
-                    </footer>
                 </div>
             </div>
             {% endfor %}
         </div>
     </div>
     {% endif %}
-    <div class="container button-container p-5 has-text-centered">
-        <a href="{{ url_for('add_movie', user_id=user.id) }}" class="button is-primary is-fullwidth-mobile">
+    <div class="container button-container p-3 has-text-centered">
+        <a href="{{ url_for('add_movie', user_id=user.id) }}"
+           class="button is-primary is-fullwidth-mobile">
             Add Movie
         </a>
     </div>
+    {% include "modals/movie_modal.html" %}
 {% endblock %}
