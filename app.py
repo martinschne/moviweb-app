@@ -1,7 +1,6 @@
 import json
 import logging
 import os
-from doctest import debug_script
 from urllib.parse import urljoin, urlencode
 
 import requests
@@ -231,6 +230,10 @@ def delete_movie(user_id: int, movie_id: int):
 @app.route("/users/<int:user_id>/add_note/<int:movie_id>", methods=["POST"])
 def add_note(user_id: int, movie_id: int):
     note = request.form.get("note").strip()
+
+    if note == "":
+        return jsonify(success=False, error="Note cannot be empty"), 400
+
     try:
         data_manager.add_user_movie_note(user_id, movie_id, note)
     except DatabaseError as error:

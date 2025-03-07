@@ -15,14 +15,15 @@
             <div class="column is-2-desktop is-2-tablet column-item">
                 <div class="card movie-card">
                     <a class="is-clickable js-modal-trigger"
+                       data-movie-id="{{ movie.id }}"
                        data-movie-title="{{ movie.name }}"
                        data-movie-director="{{ movie.director }}"
                        data-movie-year="{{ movie.year }}"
                        data-movie-rating="{{ movie.rating }}"
                        data-movie-poster-url="{{ movie.poster_url }}"
+                       data-movie-note="{{ movie.user_note }}"
                        data-movie-user="{{ user.name }}"
                        data-user-id="{{ user.id }}"
-                       data-movie-id="{{ movie.id }}"
                        data-target="movie-modal">
                         <div class="card-image">
                                 <img src="{{ movie.poster_url or 'https://placehold.co/300x444?text=No%0APoster' }}"

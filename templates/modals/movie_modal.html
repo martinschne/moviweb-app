@@ -5,7 +5,7 @@
             <article class="media modal-movie-card">
                 <div class="media-left is-hidden-mobile">
                     <figure class="image">
-                        <img class="modal-movie-poster">
+                        <img src="" alt="" class="modal-movie-poster">
                     </figure>
                 </div>
                 <div class="media-content py-5 pr-3">
@@ -41,16 +41,16 @@
                             </a>
                         </section>
                         <article class="content mt-5">
-                            <p class="has-text-weight-bold" id="movie-review-title">Review</p>
-                            <section id="note-section" class="container">
+                            <p class="has-text-weight-bold" id="movie-review-title">Note</p>
+                            <section id="note-section" class="container is-hidden">
                                 <p id="note-text">No review was added yet.</p>
-                                <a class="edit-note-button button is-small has-text-primary">Edit Review</a>
+                                <a id="edit-note-button" class="button is-small has-text-primary">Edit</a>
                             </section>
-                            <section id="no-note-section" class="container">
-                                <p>No review was added yet.</p>
-                                <a class="add-note-button button is-small has-text-primary">Add Review</a>
+                            <section id="no-note-section" class="container is-hidden">
+                                <p>No note was added yet.</p>
+                                <a id="add-note-button" class="button is-small has-text-primary">Add Note</a>
                             </section>
-                            <section id="add-note-section" class="container">
+                            <section id="add-note-section" class="container is-hidden">
                                 <form class="form" id="add-note-form" method="post">
                                     <div class="field">
                                         <div class="control note-control">
@@ -59,13 +59,21 @@
                                                         name="note"
                                                         rows="3"
                                                         maxlength="120"
-                                                        value=""></textarea>
+                                                        required></textarea>
+                                            <p id="note-char-counter" class="help has-text-grey-light"></p>
+                                            <p id="note-error-message" class="help is-danger"></p>
                                         </div>
+
                                     </div>
                                     <button id="save-note-button"
                                             class="button has-text-primary is-small"
                                             type="submit">
-                                        Save Note
+                                        Save
+                                    </button>
+                                    <button id="cancel-note-button"
+                                            class="button has-text-danger is-small"
+                                            type="button">
+                                        Cancel
                                     </button>
                                 </form>
                             </section>

@@ -44,9 +44,31 @@ class SQLiteDataManager(DataManagerInterface, ABC):
         Args:
             user_id (int) search movies
         """
+        # movies = self.db.session.execute(
+        #         self.db.select(Movie).join(UserMovie).filter(UserMovie.user_id == user_id)
+        #     ).scalars().all()
+        #
+        # user_notes = self.db.session.execute(
+        #         self.db.select(UserMovie.user_note).filter(UserMovie.user_id == user_id)
+        #     ).scalars().all()
+        #
+        # # add user_note to movies
+        # for movie in movies:
+        #     movie.user_note = user_notes.pop(0)
+        #
+        # return movies
         movies = self.db.session.execute(
-            self.db.select(Movie).join(UserMovie).filter(UserMovie.user_id == user_id)
-        ).scalars().all()
+            self.db.select(Movie).add_columns(UserMovie.user_note)
+            .join(UserMovie)
+            .filter(UserMovie.user_id == user_id)
+        ).all()
+
+        # Attach user_note dynamically
+        for movie, user_note in movies:
+            movie.user_note = user_note  # Add user_note to each Movie object
+
+        # Extract only Movie objects (now modified with user_note)
+        movies = [movie for movie, _ in movies]
 
         return movies
 
