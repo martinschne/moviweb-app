@@ -1,21 +1,10 @@
-@media screen and (max-width: 768px) {
-    .button.is-fullwidth-mobile {
-        display: flex;
-        width: 100%;
-    }
-
-    div.movie-content {
-        padding: 1.5rem 0.75rem !important;
-    }
-}
-
 .home-overview {
     padding: 4rem 0;
-    background-image: url("/static/images/wallpaper.jpg");
-    background-size: cover;  /* Ensures the image covers the entire screen */
-    background-position: center;  /* Centers the image */
-    background-repeat: no-repeat;  /* Prevents repeating */
-    background-attachment: fixed;  /* Optional: Keeps background fixed on scroll */
+    background-image: url("/static/images/background.webp");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 .circle-overview {
@@ -65,7 +54,6 @@
     padding: 0 !important;
 }
 
-/*noinspection CssUnresolvedCustomProperty*/
 .modal-movie-poster {
     border-top-left-radius: var(--bulma-box-radius) !important;
     border-bottom-left-radius: var(--bulma-box-radius) !important;
@@ -98,4 +86,50 @@
     width: 100%;
     height: 384px;
     object-fit: cover;
+}
+
+/* High-resolution Retina (2x scaling) */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .home-overview {
+        background-image: url("/static/images/background@2x.webp");
+    }
+}
+
+/* Tablets */
+@media (max-width: 1024px) {
+    .home-overview {
+        background-image: url("/static/images/background-tablet.webp");
+    }
+}
+
+/* High-resolution tablets (2x scaling) */
+@media (max-width: 1024px) and (-webkit-min-device-pixel-ratio: 2),
+(max-width: 768px) and (min-resolution: 192dpi) {
+    .home-overview {
+        background-image: url("/static/images/background-tablet@2x.webp");
+    }
+}
+
+/* Mobile devices */
+@media (max-width: 768px) {
+    .home-overview {
+        background-image: url("/static/images/background-mobile.webp");
+    }
+
+    .button.is-fullwidth-mobile {
+        display: flex;
+        width: 100%;
+    }
+
+    div.movie-content {
+        padding: 1.5rem 0.75rem !important;
+    }
+}
+
+/* High-resolution mobile devices (2x scaling) */
+@media (max-width: 768px) and (-webkit-min-device-pixel-ratio: 2),
+(max-width: 768px) and (min-resolution: 192dpi) {
+    .home-overview {
+        background-image: url("/static/images/background-mobile@2x.webp");
+    }
 }
