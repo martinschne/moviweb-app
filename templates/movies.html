@@ -25,10 +25,11 @@
                        data-movie-user="{{ user.name }}"
                        data-user-id="{{ user.id }}"
                        data-target="movie-modal">
-                        <div class="card-image">
+                        <div class="card-image is-unselectable">
                                 <img src="{{ movie.poster_url or 'https://placehold.co/300x444?text=No%0APoster' }}"
                                      alt="{{ movie.name }} - movie poster"
                                      class="fixed-image"
+                                     draggable="false"
                                 />
                         </div>
                     </a>
@@ -44,7 +45,10 @@
     <div class="container button-container p-3 has-text-centered">
         <a href="{{ url_for('add_movie', user_id=user.id) }}"
            class="button is-primary is-fullwidth-mobile">
-            Add Movie
+            <span class="icon is-medium">
+                <i class="bx bxs-movie"></i>
+            </span>
+            <span>Add Movie</span>
         </a>
     </div>
 {% endblock %}

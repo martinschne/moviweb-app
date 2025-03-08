@@ -11,7 +11,12 @@
                            required>
                 </div>
                 <div class="control">
-                    <input class="button is-primary" type="submit" value="{{ submit_button_value }}">
+                    <button class="button is-primary" type="submit">
+                        <span class="icon is-medium">
+                            <i class="{{ submit_button_icon }}"></i>
+                        </span>
+                        <span>{{ submit_button_value }}</span>
+                    </button>
                 </div>
             </div>
         </form>

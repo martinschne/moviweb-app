@@ -9,6 +9,23 @@
     }
 }
 
+.home-overview {
+    padding: 4rem 0;
+    background-image: url("/static/images/wallpaper.jpg");
+    background-size: cover;  /* Ensures the image covers the entire screen */
+    background-position: center;  /* Centers the image */
+    background-repeat: no-repeat;  /* Prevents repeating */
+    background-attachment: fixed;  /* Optional: Keeps background fixed on scroll */
+}
+
+.circle-overview {
+    border-radius: 50%;
+    padding: 2rem;
+    min-width: 10rem;
+    min-height: 10rem;
+    aspect-ratio: 1 / 1;
+}
+
 .column-item {
     min-width: fit-content !important;
 }
@@ -48,6 +65,7 @@
     padding: 0 !important;
 }
 
+/*noinspection CssUnresolvedCustomProperty*/
 .modal-movie-poster {
     border-top-left-radius: var(--bulma-box-radius) !important;
     border-bottom-left-radius: var(--bulma-box-radius) !important;
