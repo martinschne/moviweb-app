@@ -1,48 +1,52 @@
 import json
 import logging
-import os
 from urllib.parse import urljoin, urlencode
 
 import requests
-from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for, flash, abort, jsonify
 
+from config import Config
 from data_manager.sqlite_data_manager import SQLiteDataManager
 from project.data_models import db, Movie, User
 from project.exceptions import DatabaseError, MovieNotFoundError, UserNotUniqueError
 from utils.validation import get_valid_number_or_none, get_valid_url_or_none
 
-load_dotenv()
-
-API_KEY = os.getenv("API_KEY")
-
 app = Flask(__name__)
+app.config.from_object(Config)
+
+db.init_app(app)
+data_manager = SQLiteDataManager(db)
 
 # Set up global logging configuration
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
 logger = logging.getLogger("app")
 
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))  # Root directory
-DB_PATH = os.path.join(BASE_DIR, "data", "moviweb_app.db")  # Correct database location
 
-app.config['SECRET_KEY'] = os.getenv("FLASK_SECRET_KEY")
-app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_PATH}"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-db.init_app(app)
-
-data_manager = SQLiteDataManager(db)
-
-
-# Custom filter for pluralizing
 @app.template_filter("pluralize")
 def pluralize(count, word):
+    """
+    Pluralizes a given word based on the count.
+
+    Args:
+        count (int): The number of items.
+        word (str): The singular form of the word to pluralize.
+
+    Returns:
+        str: The pluralized word if count is not 1, otherwise the singular word.
+    """
     return word if count == 1 else word + 's'
 
 
 @app.route('/')
 def home():
+    """
+    Displays the homepage with the count of users and movies.
+
+    Retrieves the total number of users and movies from the data manager and renders the home page.
+
+    Returns:
+        Response: The rendered HTML template for the homepage with users and movie counts.
+    """
     users_count = data_manager.get_all_users_count()
     movies_count = data_manager.get_all_movies_count()
     return render_template("index.html", users_count=users_count, movies_count=movies_count)
@@ -50,12 +54,29 @@ def home():
 
 @app.route("/users")
 def list_users():
+    """
+    Lists all users in the database.
+
+    Retrieves all users and renders the users list page.
+
+    Returns:
+        Response: The rendered HTML template showing the list of users.
+    """
     users = data_manager.get_all_users()
     return render_template("content/users.html", users=users)
 
 
 @app.route("/users/<int:user_id>")
 def user_movies(user_id: int):
+    """
+    Displays a user's movie list.
+
+    Args:
+        user_id (int): The ID of the user whose movies are to be displayed.
+
+    Returns:
+        Response: The rendered HTML template showing the list of movies for the specified user.
+    """
     movies = data_manager.get_user_movies(user_id)
     user = db.get_or_404(User, user_id, description="User not found!")
     # Note - add notes to the movies
@@ -64,6 +85,14 @@ def user_movies(user_id: int):
 
 @app.route("/add_user", methods=["GET", "POST"])
 def add_user():
+    """
+    Allows the creation of a new user.
+
+    Handles both GET and POST requests. For GET, renders the user creation form. For POST, attempts to add a new user to the database.
+
+    Returns:
+        Response: The rendered HTML template for the user creation form, or redirects to the users list page on success.
+    """
     if request.method == "POST":
         new_user_name = request.form.get("name").strip()
         if not new_user_name:
@@ -83,9 +112,18 @@ def add_user():
 
 
 def _load_movie(title: str) -> Movie | None:
+    """
+    Loads movie information from the OMDB API.
+
+    Args:
+        title (str): The title of the movie to search for.
+
+    Returns:
+        Movie | None: A Movie object if found, otherwise None.
+    """
     new_movie = None
     base_url = "https://www.omdbapi.com/"
-    params = {"apikey": API_KEY, "t": title, "type": "movie"}
+    params = {"apikey": app.config["API_KEY"], "t": title, "type": "movie"}
 
     response = requests.get(url=urljoin(base_url, "?" + urlencode(params)))
     response_obj = json.loads(response.text)
@@ -113,6 +151,17 @@ def _load_movie(title: str) -> Movie | None:
 
 @app.route("/users/<int:user_id>/add_movie", methods=["GET", "POST"])
 def add_movie(user_id: int):
+    """
+    Allows a user to add a movie to their movie list.
+
+    Handles both GET and POST requests. For GET, renders the movie search form. For POST, attempts to add a new movie to the user's list.
+
+    Args:
+        user_id (int): The ID of the user adding the movie.
+
+    Returns:
+        Response: The rendered HTML template for the movie addition form, or redirects to the user's movie list on success.
+    """
     user = User.query.get_or_404(user_id, description="User not found!")
 
     if request.method == "POST":
@@ -172,6 +221,16 @@ def add_movie(user_id: int):
 
 @app.route("/users/<int:user_id>/update_movie/<int:movie_id>", methods=["GET", "POST"])
 def update_movie(user_id: int, movie_id: int):
+    """
+    Allows a user to update the details of a movie in their movie list.
+
+    Args:
+        user_id (int): The ID of the user updating the movie.
+        movie_id (int): The ID of the movie being updated.
+
+    Returns:
+        Response: The rendered HTML template for updating the movie, or redirects to the user's movie list on success.
+    """
     updated_movie = Movie.query.get_or_404(movie_id, description="Movie not found, unable to update.")
     movie_user = User.query.get_or_404(user_id, description="Associated user not found, unable to update the movie.")
 
@@ -202,6 +261,16 @@ def update_movie(user_id: int, movie_id: int):
 
 @app.route("/users/<int:user_id>/delete_movie/<int:movie_id>")
 def delete_movie(user_id: int, movie_id: int):
+    """
+    Deletes a movie from the user's movie list.
+
+    Args:
+        user_id (int): The ID of the user whose movie list the movie is being removed from.
+        movie_id (int): The ID of the movie to be deleted.
+
+    Returns:
+        Response: Redirects to the user's movie list after deletion.
+    """
     try:
         data_manager.delete_movie(movie_id)
     except MovieNotFoundError as error:
@@ -214,6 +283,16 @@ def delete_movie(user_id: int, movie_id: int):
 
 @app.route("/users/<int:user_id>/add_note/<int:movie_id>", methods=["POST"])
 def add_note(user_id: int, movie_id: int):
+    """
+    Adds a note to a specific movie in the user's movie list.
+
+    Args:
+        user_id (int): The ID of the user who owns the movie list.
+        movie_id (int): The ID of the movie to which the note will be added.
+
+    Returns:
+        Response: JSON response indicating success or failure.
+    """
     note = request.form.get("note").strip()
 
     if note == "":
@@ -229,13 +308,31 @@ def add_note(user_id: int, movie_id: int):
 
 @app.errorhandler(404)
 def page_not_found(error):
+    """
+    Handles 404 errors (page not found).
+
+    Args:
+        error (Error): The error object containing the description of the error.
+
+    Returns:
+        Response: The rendered 404 error page.
+    """
     return render_template('errors/404.html', message=error.description), 404
 
 
 @app.errorhandler(500)
 def internal_server_error(error):
+    """
+    Handles 500 errors (internal server error).
+
+    Args:
+        error (Error): The error object containing the description of the error.
+
+    Returns:
+        Response: The rendered 500 error page.
+    """
     return render_template('errors/500.html', message=error.description), 500
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
