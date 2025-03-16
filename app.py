@@ -19,8 +19,7 @@ API_KEY = os.getenv("API_KEY")
 app = Flask(__name__)
 
 # Set up global logging configuration
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 logger = logging.getLogger("app")
 
@@ -34,6 +33,12 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 
 data_manager = SQLiteDataManager(db)
+
+
+# Custom filter for pluralizing
+@app.template_filter("pluralize")
+def pluralize(count, word):
+    return word if count == 1 else word + 's'
 
 
 @app.route('/')
@@ -95,13 +100,8 @@ def _load_movie(title: str) -> Movie | None:
             new_rating = get_valid_number_or_none(response_obj["imdbRating"], float)
             new_poster_url = get_valid_url_or_none(response_obj["Poster"])
 
-            new_movie = Movie(
-                name=new_title,
-                director=new_director,
-                year=new_year,
-                rating=new_rating,
-                poster_url=new_poster_url
-            )
+            new_movie = Movie(name=new_title, director=new_director, year=new_year, rating=new_rating,
+                              poster_url=new_poster_url)
 
         else:
             logger.warning(response_obj["Error"])
@@ -127,20 +127,12 @@ def add_movie(user_id: int):
         movie_rating = get_valid_number_or_none(request.form.get("rating").strip(), float)
         movie_poster_url = get_valid_url_or_none(request.form.get("poster_url").strip())
 
-        new_movie = Movie(
-            name=movie_name,
-            director=movie_director,
-            year=movie_year,
-            rating=movie_rating,
-            poster_url=movie_poster_url
-        )
+        new_movie = Movie(name=movie_name, director=movie_director, year=movie_year, rating=movie_rating,
+                          poster_url=movie_poster_url)
 
         try:
             user_movie_list = data_manager.get_user_movies(user_id)
-            this_user_movie = next(
-                (movie for movie in user_movie_list if movie.name == movie_name),
-                None
-            )
+            this_user_movie = next((movie for movie in user_movie_list if movie.name == movie_name), None)
             added_movie = data_manager.get_movie_by_title(movie_name)
 
             if not added_movie:
@@ -159,7 +151,6 @@ def add_movie(user_id: int):
 
         return redirect(url_for("user_movies", user_id=user_id))
 
-    # get (movie search)
     title = request.args.get("title")
 
     if title:
@@ -196,14 +187,8 @@ def update_movie(user_id: int, movie_id: int):
         movie_rating = get_valid_number_or_none(request.form.get("rating").strip(), float)
         movie_poster_url = get_valid_url_or_none(request.form.get("poster_url").strip())
 
-        updated_movie = Movie(
-            id=movie_id,
-            name=movie_name,
-            director=movie_director,
-            year=movie_year,
-            rating=movie_rating,
-            poster_url=movie_poster_url
-        )
+        updated_movie = Movie(id=movie_id, name=movie_name, director=movie_director, year=movie_year,
+                              rating=movie_rating, poster_url=movie_poster_url)
 
         try:
             data_manager.update_movie(updated_movie)
@@ -244,18 +229,12 @@ def add_note(user_id: int, movie_id: int):
 
 @app.errorhandler(404)
 def page_not_found(error):
-    return render_template(
-        'errors/404.html',
-        message=error.description
-    ), 404
+    return render_template('errors/404.html', message=error.description), 404
 
 
 @app.errorhandler(500)
 def internal_server_error(error):
-    return render_template(
-        'errors/500.html',
-        message=error.description
-    ), 500
+    return render_template('errors/500.html', message=error.description), 500
 
 
 if __name__ == "__main__":

@@ -9,7 +9,7 @@ from project.data_models import db, User, Movie
 def session():
     engine = create_engine('sqlite:///:memory:')
     Session = sessionmaker(bind=engine)
-    db.metadata.create_all(engine)  # This creates the schema with the constraints
+    db.metadata.create_all(engine)
     session = Session()
     yield session
     session.rollback()

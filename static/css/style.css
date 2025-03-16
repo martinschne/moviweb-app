@@ -1,3 +1,43 @@
+/* fonts */
+
+@font-face {
+    font-family: 'Montera';
+    src: url('../fonts/Montera.ttf');
+}
+
+@font-face {
+    font-family: 'Open Sans Regular';
+    src: url('../fonts/OpenSans-Regular.ttf')
+}
+
+@font-face {
+    font-family: 'Open Sans Medium';
+    src: url('../fonts/OpenSans-Medium.ttf')
+}
+
+@font-face {
+    font-family: 'Raleway Medium';
+    src: url('../fonts/Raleway-Medium.ttf')
+}
+
+/* styles */
+
+body {
+    font-family: "Open Sans Regular";
+}
+
+header {
+    font-family: "Raleway Medium", sans-serif;
+}
+
+.title {
+    font-family: 'Raleway Medium', sans-serif;
+}
+
+.button {
+    font-family: 'Open Sans Medium', sans-serif;
+}
+
 .home-overview {
     padding: 4rem 0;
     background-image: url("/static/images/background.webp");
@@ -5,6 +45,7 @@
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
+    font-family: 'Montera', sans-serif;
 }
 
 .circle-overview {

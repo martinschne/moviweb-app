@@ -69,6 +69,11 @@ def test_saving_movie_without_name(session, test_movie):
 
 
 def test_saving_movie_only_with_name(session, test_movie):
+    """
+    GIVEN a Movie model with non-nullable 'name' attribute
+    WHEN a new Movie is created with only 'name' attribute provided
+    THEN check the movies attributes are defined correctly
+    """
     named_movie_without_details = Movie(name=test_movie.name)
 
     session.add(named_movie_without_details)
@@ -85,6 +90,11 @@ def test_saving_movie_only_with_name(session, test_movie):
 
 
 def test_saving_users_with_same_name(session):
+    """
+    GIVEN a User model with non-nullable 'name' attribute
+    WHEN two new Users are created with the same value for 'name' attribute provided
+    THEN IntegrityError is raised
+    """
     user1 = User(name="test_user")
     user2 = User(name="test_user")
 
@@ -97,6 +107,11 @@ def test_saving_users_with_same_name(session):
 
 
 def test_saving_user_with_distinct_names(session):
+    """
+    GIVEN a User model with non-nullable 'name' attribute
+    WHEN two new Users are created with distinct values for 'name' attribute
+    THEN check if users are saved with their specified names
+    """
     user1_name = "first_test_user"
     user2_name = "second_test_user"
 
@@ -119,6 +134,11 @@ def test_saving_user_with_distinct_names(session):
 
 
 def test_deleting_movie(session, test_user, test_movie):
+    """
+    GIVEN a Movie model and a User model
+    WHEN two users are created and a movie assigned to both of them is deleted
+    Then movie is deleted from db and both users don't have it assigned to them
+    """
     user1 = test_user
     user2 = User(name="test_user2")
     movie = test_movie

@@ -6,8 +6,8 @@ from project.data_models import User, Movie, UserMovie
 logger = logging.getLogger("setup")
 
 
-# populate table with fake data
 def populate_db():
+    """ Populate database tables with mocked data from model instances. """
     # create users
     martin = User(name="Martin")
     lucy = User(name="Lucy")
@@ -19,7 +19,8 @@ def populate_db():
         director="Steven Spielberg",
         year=1993,
         rating=9.0,
-        poster_url="https://m.media-amazon.com/images/M/MV5BNjM1ZDQxYWUtMzQyZS00MTE1LWJmZGYtNGUyNTdlYjM3ZmVmXkEyXkFqcGc@._V1_SX300.jpg"
+        poster_url="https://m.media-amazon.com/images/M/MV5BNjM1ZDQxYWUtMzQyZS00MTE1LWJmZGYtNGUyNTdlYjM3ZmVmXkEyXkFqcGc@._V1_SX300.jpg",
+        user_note="Very sad movie, Worth to watch again."
     )
 
     interstellar_movie = Movie(
@@ -27,7 +28,8 @@ def populate_db():
         director="Christopher Nolan",
         year=2014,
         rating=8.7,
-        poster_url="https://m.media-amazon.com/images/M/MV5BYzdjMDAxZGItMjI2My00ODA1LTlkNzItOWFjMDU5ZDJlYWY3XkEyXkFqcGc@._V1_SX300.jpg"
+        poster_url="https://m.media-amazon.com/images/M/MV5BYzdjMDAxZGItMjI2My00ODA1LTlkNzItOWFjMDU5ZDJlYWY3XkEyXkFqcGc@._V1_SX300.jpg",
+        user_note="Super cool space animations!"
     )
 
     gladiator_movie = Movie(
@@ -43,15 +45,16 @@ def populate_db():
         director="Lana & Lilly Wachowski",
         year=1999,
         rating=8.7,
-        poster_url="https://m.media-amazon.com/images/M/MV5BN2NmN2VhMTQtMDNiOS00NDlhLTliMjgtODE2ZTY0ODQyNDRhXkEyXkFqcGc@._V1_SX300.jpg"
+        poster_url="https://m.media-amazon.com/images/M/MV5BN2NmN2VhMTQtMDNiOS00NDlhLTliMjgtODE2ZTY0ODQyNDRhXkEyXkFqcGc@._V1_SX300.jpg",
+        user_note="Are we living in The Matrix?"
     )
 
     shawshank_redemption_movie = Movie(
         name="The Shawshank Redemption",
-        director="Frank Darabont",
-        year=1994,
+        director="Frank Darabont", year=1994,
         rating=9.3,
-        poster_url="https://m.media-amazon.com/images/M/MV5BMDAyY2FhYjctNDc5OS00MDNlLThiMGUtY2UxYWVkNGY2ZjljXkEyXkFqcGc@._V1_SX300.jpg"
+        poster_url="https://m.media-amazon.com/images/M/MV5BMDAyY2FhYjctNDc5OS00MDNlLThiMGUtY2UxYWVkNGY2ZjljXkEyXkFqcGc@._V1_SX300.jpg",
+        user_note="Huh, Frank has made a great job on this one!"
     )
 
     whiplash_movie = Movie(
@@ -85,6 +88,7 @@ def populate_db():
 
 
 def create_db():
+    """ Create tables in a database based on the data models. """
     db.create_all()
     logger.info("Database created!")
 
