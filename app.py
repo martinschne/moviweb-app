@@ -51,7 +51,7 @@ def home():
 @app.route("/users")
 def list_users():
     users = data_manager.get_all_users()
-    return render_template("users.html", users=users)
+    return render_template("content/users.html", users=users)
 
 
 @app.route("/users/<int:user_id>")
@@ -59,7 +59,7 @@ def user_movies(user_id: int):
     movies = data_manager.get_user_movies(user_id)
     user = db.get_or_404(User, user_id, description="User not found!")
     # Note - add notes to the movies
-    return render_template("movies.html", movies=movies, user=user)
+    return render_template("content/movies.html", movies=movies, user=user)
 
 
 @app.route("/add_user", methods=["GET", "POST"])
@@ -73,13 +73,13 @@ def add_user():
                 data_manager.add_user(User(name=new_user_name))
             except UserNotUniqueError:
                 flash("User already exists. Choose other name.")
-                return render_template("add_user.html")
+                return render_template("forms/add_user.html")
             except DatabaseError as error:
                 abort(500, description=str(error))
 
             return redirect(url_for("list_users"))
 
-    return render_template("add_user.html")
+    return render_template("forms/add_user.html")
 
 
 def _load_movie(title: str) -> Movie | None:
@@ -159,15 +159,15 @@ def add_movie(user_id: int):
         except requests.exceptions.ConnectionError as error:
             logger.error(f"Connection to omdb failed: {str(error)}")
             flash("Searching online failed, please retry later.")
-            return render_template("add_movie.html", user=user, movie=None)
+            return render_template("forms/add_movie.html", user=user, movie=None)
 
         matching_movie = data_manager.get_movie_by_title(title) or fetched_movie
         if not matching_movie:
             flash(f"No movie found. Try a different search.")
 
-        return render_template("add_movie.html", user=user, movie=matching_movie)
+        return render_template("forms/add_movie.html", user=user, movie=matching_movie)
 
-    return render_template("add_movie.html", user=user, movie=None)
+    return render_template("forms/add_movie.html", user=user, movie=None)
 
 
 @app.route("/users/<int:user_id>/update_movie/<int:movie_id>", methods=["GET", "POST"])
@@ -180,7 +180,7 @@ def update_movie(user_id: int, movie_id: int):
         movie_name = request.form.get("name").strip()
         if not movie_name:
             flash("Movie name is required")
-            return render_template("update_movie.html", user_id=user_id, movie=updated_movie)
+            return render_template("forms/update_movie.html", user_id=user_id, movie=updated_movie)
 
         movie_director = request.form.get("director").strip() or None
         movie_year = get_valid_number_or_none(request.form.get("year").strip(), int)
@@ -197,7 +197,7 @@ def update_movie(user_id: int, movie_id: int):
 
         return redirect(url_for("user_movies", user_id=movie_user.id))
 
-    return render_template("update_movie.html", user_id=user_id, movie=updated_movie)
+    return render_template("forms/update_movie.html", user_id=user_id, movie=updated_movie)
 
 
 @app.route("/users/<int:user_id>/delete_movie/<int:movie_id>")

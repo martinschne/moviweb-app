@@ -13,7 +13,7 @@
         <div class="columns is-multiline">
             {% for user in users %}
             <div class="column is-one-fifth-desktop is-one-third-tablet column-item">
-                <a href="{{ url_for('user_movies', user_id=user['id']) }}">
+                <a href="{{ url_for('user_movies', user_id=user.id) }}">
                     <div class="user-card">
                         <div class="card-image avatar is-full-width py-4 is-unselectable">
                             <figure class="image is-1by1">
