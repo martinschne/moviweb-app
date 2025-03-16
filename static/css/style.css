@@ -1,41 +1,45 @@
-/* fonts */
-
+/* Fonts */
 @font-face {
-    font-family: 'Montera';
-    src: url('../fonts/Montera.ttf');
+    font-family: "Montera";
+    src: url("../fonts/Montera.ttf");
 }
 
 @font-face {
-    font-family: 'Open Sans Regular';
-    src: url('../fonts/OpenSans-Regular.ttf')
-}
-
-@font-face {
-    font-family: 'Open Sans Medium';
-    src: url('../fonts/OpenSans-Medium.ttf')
-}
-
-@font-face {
-    font-family: 'Raleway Medium';
-    src: url('../fonts/Raleway-Medium.ttf')
-}
-
-/* styles */
-
-body {
     font-family: "Open Sans Regular";
+    src: url("../fonts/OpenSans-Regular.ttf")
+}
+
+@font-face {
+    font-family: "Open Sans Medium";
+    src: url("../fonts/OpenSans-Medium.ttf")
+}
+
+@font-face {
+    font-family: "Raleway Medium";
+    src: url("../fonts/Raleway-Medium.ttf")
+}
+
+@font-face {
+    font-family: "Raleway SemiBold";
+    src: url("../fonts/Raleway-SemiBold.ttf")
+}
+
+/* Common styles */
+body {
+    font-family: "Open Sans Regular", sans-serif;
 }
 
 header {
-    font-family: "Raleway Medium", sans-serif;
+    font-family: "Raleway SemiBold", sans-serif;
+    font-weight: 500;
 }
 
 .title {
-    font-family: 'Raleway Medium', sans-serif;
+    font-family: "Raleway Medium", sans-serif;
 }
 
 .button {
-    font-family: 'Open Sans Medium', sans-serif;
+    font-family: "Open Sans Medium", sans-serif;
 }
 
 .home-overview {
@@ -45,7 +49,7 @@ header {
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    font-family: 'Montera', sans-serif;
+    font-family: "Montera", sans-serif;
 }
 
 .circle-overview {
@@ -54,6 +58,7 @@ header {
     min-width: 10rem;
     min-height: 10rem;
     aspect-ratio: 1 / 1;
+    box-shadow: 2px 2px 4.75rem 1.50rem rgba(137, 217, 98, 1);
 }
 
 .column-item {
@@ -77,6 +82,7 @@ header {
 .user-card {
     width: 128px;
     margin: 0 auto;
+    font-weight: 500;
 }
 
 .movie-card {
