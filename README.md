@@ -1,7 +1,7 @@
 # Moviweb App
 
 Web application allowing users
-to add their favorite movies from online movie database.
+to save their favorite movies from online movie database.
 
 ## Features:
 
