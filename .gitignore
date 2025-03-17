@@ -155,4 +155,8 @@ fabric.properties
 # Added ignore for __pycache__ directory
 __pycache__/
 
+# Exclude generated resources and cache
+/static/dist/
+/static/.webassets-cache/
+
 # End of https://www.toptal.com/developers/gitignore/api/pycharm,macos

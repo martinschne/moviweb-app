@@ -4,43 +4,43 @@
 {% block header %}Users{% endblock %}
 
 {% block content %}
-    {% if not users %}
+{% if not users %}
 <div class="container has-text-centered" xmlns="http://www.w3.org/1999/html">
-        <p class="subtitle">No users were found, please add one first.</p>
-    </div>
-    {% else %}
-    <div class="is-flex is-justify-content-center">
-        <div class="columns is-multiline">
-            {% for user in users %}
-            <div class="column is-one-fifth-desktop is-one-third-tablet column-item">
-                <a href="{{ url_for('user_movies', user_id=user.id) }}">
-                    <div class="user-card">
-                        <div class="card-image avatar is-full-width py-4 is-unselectable">
-                            <figure class="image is-1by1">
-                                <img class="is-rounded"
-                                     src="https://ui-avatars.com/api/?background=random&size=256&rounded=true&
+    <p class="subtitle">No users were found, please add one first.</p>
+</div>
+{% else %}
+<div class="is-flex is-justify-content-center">
+    <div class="columns is-multiline">
+        {% for user in users %}
+        <div class="column is-one-fifth-desktop is-one-third-tablet column-item">
+            <a href="{{ url_for('user_movies', user_id=user.id) }}">
+                <div class="user-card">
+                    <div class="card-image avatar is-full-width py-4 is-unselectable">
+                        <figure class="image is-1by1">
+                            <img class="is-rounded"
+                                 src="https://ui-avatars.com/api/?background=random&size=256&rounded=true&
                                          format=svg&name={{ user.name }}"
-                                     alt="{{ user.name }}' user avatar"
-                                     draggable="false"
-                                />
-                            </figure>
-                        </div>
-                        <header class="card-header">
-                            <p class="card-header-title has-text-light is-centered">{{ user.name }}</p>
-                        </header>
+                                 alt="{{ user.name }}' user avatar"
+                                 draggable="false"
+                            />
+                        </figure>
                     </div>
-                </a>
-            </div>
-            {% endfor %}
+                    <header class="card-header">
+                        <p class="card-header-title has-text-light is-centered">{{ user.name }}</p>
+                    </header>
+                </div>
+            </a>
         </div>
+        {% endfor %}
     </div>
-    {% endif %}
-    <div class="container button-container p-5 has-text-centered">
-        <a class="button is-primary is-fullwidth-mobile" href="{{ url_for('add_user') }}">
+</div>
+{% endif %}
+<div class="container button-container p-5 has-text-centered">
+    <a class="button is-primary is-fullwidth-mobile" href="{{ url_for('add_user') }}">
             <span class="icon is-medium">
                 <i class="bx bxs-user"></i>
             </span>
-            <span>Add User</span>
-        </a>
-    </div>
+        <span>Add User</span>
+    </a>
+</div>
 {% endblock %}

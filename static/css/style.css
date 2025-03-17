@@ -1,27 +1,27 @@
 /* Fonts */
 @font-face {
     font-family: "Montera";
-    src: url("../fonts/Montera.ttf");
+    src: url("/static/fonts/Montera.ttf");
 }
 
 @font-face {
     font-family: "Open Sans Regular";
-    src: url("../fonts/OpenSans-Regular.ttf")
+    src: url("/static/fonts/OpenSans-Regular.ttf")
 }
 
 @font-face {
     font-family: "Open Sans Medium";
-    src: url("../fonts/OpenSans-Medium.ttf")
+    src: url("/static/fonts/OpenSans-Medium.ttf")
 }
 
 @font-face {
     font-family: "Raleway Medium";
-    src: url("../fonts/Raleway-Medium.ttf")
+    src: url("/static/fonts/Raleway-Medium.ttf")
 }
 
 @font-face {
     font-family: "Raleway SemiBold";
-    src: url("../fonts/Raleway-SemiBold.ttf")
+    src: url("/static/fonts/Raleway-SemiBold.ttf")
 }
 
 /* Common styles */

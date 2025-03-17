@@ -4,6 +4,7 @@ from urllib.parse import urljoin, urlencode
 
 import requests
 from flask import Flask, render_template, request, redirect, url_for, flash, abort, jsonify
+from flask_assets import Environment, Bundle
 
 from config import Config
 from data_manager.sqlite_data_manager import SQLiteDataManager
@@ -13,6 +14,14 @@ from utils.validation import get_valid_number_or_none, get_valid_url_or_none
 
 app = Flask(__name__)
 app.config.from_object(Config)
+
+assets = Environment(app)
+
+css = Bundle("css/style.css", filters="cssmin", output="dist/css/style.min.css")
+js = Bundle("js/script.js", filters="jsmin", output="dist/js/script.min.js")
+
+assets.register("css_all", css)
+assets.register("js_all", js)
 
 db.init_app(app)
 data_manager = SQLiteDataManager(db)
@@ -317,7 +326,8 @@ def page_not_found(error):
     Returns:
         Response: The rendered 404 error page.
     """
-    return render_template('errors/404.html', message=error.description), 404
+    error_title = "404 Page Not Found"
+    return render_template('error.html', title=error_title, message=error.description), 404
 
 
 @app.errorhandler(500)
@@ -331,7 +341,8 @@ def internal_server_error(error):
     Returns:
         Response: The rendered 500 error page.
     """
-    return render_template('errors/500.html', message=error.description), 500
+    error_title = "500 Internal Server Error"
+    return render_template('error.html', title=error_title, message=error.description), 500
 
 
 if __name__ == "__main__":

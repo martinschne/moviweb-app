@@ -4,17 +4,17 @@
 {% block header %}Add User{% endblock %}
 
 {% block content %}
-    {% set action_url = url_for("add_user") %}
-    {% set form_method = "post" %}
-    {% set input_identifier = "name" %}
-    {% set input_placeholder = "Enter your name" %}
-    {% set submit_button_value = "Add" %}
-    {% set submit_button_icon = "bx bx-user-plus" %}
+{% set action_url = url_for("add_user") %}
+{% set form_method = "post" %}
+{% set input_identifier = "name" %}
+{% set input_placeholder = "Enter your name" %}
+{% set submit_button_value = "Add" %}
+{% set submit_button_icon = "bx bx-user-plus" %}
 
-    {% include "forms/add_form.html" %}
-    <div class="container has-text-centered">
-        <p class="has-text-danger mt-3">
-            {% include "forms/_flash_messages.html" %}
-        </p>
-    </div>
+{% include "forms/add_form.html" %}
+<div class="container has-text-centered">
+    <p class="has-text-danger mt-3">
+        {% include "forms/_flash_messages.html" %}
+    </p>
+</div>
 {% endblock %}

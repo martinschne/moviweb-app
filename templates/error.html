@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/1.0.3/css/bulma.min.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"/>
+    {% assets "css_all" %}
+    <link rel="stylesheet" href="{{ ASSETS_URL }}"/>
+    {% endassets %}
+</head>
+<body>
+<main class="hero is-fullheight">
+    <div class="hero-body">
+        <div class="container content has-text-centered">
+            <p class="title mb-6">{{ title }}</p>
+            <p class="subtitle">{{ message }}</p>
+            <div class="container button-container p-5 has-text-centered">
+                <a class="button is-primary is-fullwidth-mobile" href="{{ url_for('home') }}">
+                        <span class="icon is-medium">
+                            <i class="bx bxs-home"></i>
+                        </span>
+                    <span>Go Back to Homepage</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

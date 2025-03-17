@@ -4,8 +4,8 @@
 {% block header %}Update Movie{% endblock %}
 
 {% block content %}
-    {% set action_url = url_for("update_movie", user_id=user_id, movie_id=movie.id) %}
-    {% set submit_button_value = "Update" %}
+{% set action_url = url_for("update_movie", user_id=user_id, movie_id=movie.id) %}
+{% set submit_button_value = "Update" %}
 
-    {% include "forms/movie_form.html" %}
+{% include "forms/movie_form.html" %}
 {% endblock %}

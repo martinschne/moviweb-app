@@ -4,51 +4,51 @@
 {% block header %}{{ user.name }}'s Movies{% endblock %}
 
 {% block content %}
-    {% if not movies %}
-    <div class="container has-text-centered">
-        <p class="subtitle">This user has no movies assigned.</p>
-    </div>
-    {% else %}
-    <div class="is-flex is-justify-content-center">
-        <div class="columns is-multiline">
-            {% for movie in movies %}
-            <div class="column is-2-desktop is-2-tablet column-item">
-                <div class="card movie-card">
-                    <a class="is-clickable js-modal-trigger"
-                       data-movie-id="{{ movie.id }}"
-                       data-movie-title="{{ movie.name }}"
-                       data-movie-director="{{ movie.director }}"
-                       data-movie-year="{{ movie.year }}"
-                       data-movie-rating="{{ movie.rating }}"
-                       data-movie-poster-url="{{ movie.poster_url }}"
-                       data-movie-note="{{ movie.user_note }}"
-                       data-movie-user="{{ user.name }}"
-                       data-user-id="{{ user.id }}"
-                       data-target="movie-modal">
-                        <div class="card-image is-unselectable">
-                                <img src="{{ movie.poster_url or 'https://placehold.co/300x444?text=No%0APoster' }}"
-                                     alt="{{ movie.name }} - movie poster"
-                                     class="fixed-image"
-                                     draggable="false"
-                                />
-                        </div>
-                    </a>
-                    <header class="card-header">
-                        <p class="card-header-title is-centered">{{ movie.name }}</p>
-                    </header>
-                </div>
+{% if not movies %}
+<div class="container has-text-centered">
+    <p class="subtitle">This user has no movies assigned.</p>
+</div>
+{% else %}
+<div class="is-flex is-justify-content-center">
+    <div class="columns is-multiline">
+        {% for movie in movies %}
+        <div class="column is-2-desktop is-2-tablet column-item">
+            <div class="card movie-card">
+                <a class="is-clickable js-modal-trigger"
+                   data-movie-id="{{ movie.id }}"
+                   data-movie-title="{{ movie.name }}"
+                   data-movie-director="{{ movie.director }}"
+                   data-movie-year="{{ movie.year }}"
+                   data-movie-rating="{{ movie.rating }}"
+                   data-movie-poster-url="{{ movie.poster_url }}"
+                   data-movie-note="{{ movie.user_note }}"
+                   data-movie-user="{{ user.name }}"
+                   data-user-id="{{ user.id }}"
+                   data-target="movie-modal">
+                    <div class="card-image is-unselectable">
+                        <img src="{{ movie.poster_url or 'https://placehold.co/300x444?text=No%0APoster' }}"
+                             alt="{{ movie.name }} - movie poster"
+                             class="fixed-image"
+                             draggable="false"
+                        />
+                    </div>
+                </a>
+                <header class="card-header">
+                    <p class="card-header-title is-centered">{{ movie.name }}</p>
+                </header>
             </div>
-            {% endfor %}
         </div>
+        {% endfor %}
     </div>
-    {% endif %}
-    <div class="container button-container p-3 has-text-centered">
-        <a href="{{ url_for('add_movie', user_id=user.id) }}"
-           class="button is-primary is-fullwidth-mobile">
+</div>
+{% endif %}
+<div class="container button-container p-3 has-text-centered">
+    <a href="{{ url_for('add_movie', user_id=user.id) }}"
+       class="button is-primary is-fullwidth-mobile">
             <span class="icon is-medium">
                 <i class="bx bxs-movie"></i>
             </span>
-            <span>Add Movie</span>
-        </a>
-    </div>
+        <span>Add Movie</span>
+    </a>
+</div>
 {% endblock %}

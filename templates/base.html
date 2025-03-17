@@ -4,49 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/1.0.3/css/bulma.min.css"  />
-    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/1.0.3/css/bulma.min.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"/>
+    {% assets "css_all" %}
+    <link rel="stylesheet" href="{{ ASSET_URL }}"/>
+    {% endassets %}
+    {% assets "js_all" %}
+    <script src="{{ ASSETS_URL }}"></script>
+    {% endassets %}
 </head>
 <body class="has-navbar-fixed-top">
-    <header class="is-unselectable">
-        <nav class="navbar is-fixed-top has-shadow"
-             role="navigation"
-             aria-label="main navigation">
-            <div class="container">
-                <div class="navbar-brand">
-                    <a class="navbar-burger" role="button" aria-label="menu" aria-expanded="false">
-                        <span aria-hidden="true"></span>
-                        <span aria-hidden="true"></span>
-                        <span aria-hidden="true"></span>
-                        <span aria-hidden="true"></span>
-                    </a>
-                </div>
-                <div id=main-menu class="navbar-menu">
-                    <div class="navbar-start">
-                        <a class="navbar-item" href="{{ url_for('home') }}">Home</a>
-                        <a class="navbar-item" href="{{ url_for('list_users') }}">Users</a>
-                    </div>
+<header class="is-unselectable">
+    <nav class="navbar is-fixed-top has-shadow"
+         role="navigation"
+         aria-label="main navigation">
+        <div class="container">
+            <div class="navbar-brand">
+                <a class="navbar-burger" role="button" aria-label="menu" aria-expanded="false">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+            <div id=main-menu class="navbar-menu">
+                <div class="navbar-start">
+                    <a class="navbar-item" href="{{ url_for('home') }}">Home</a>
+                    <a class="navbar-item" href="{{ url_for('list_users') }}">Users</a>
                 </div>
             </div>
-        </nav>
-    </header>
-    <main class="hero is-fullheight-with-navbar">
-        <div class="has-text-centered mt-5">
-            <p class="title">{% block header %}{% endblock %}</p>
         </div>
-        <div class="hero-body">
-            <div class="container content is-flex is-flex-direction-column is-justify-content-center">
-                {% block content %}{% endblock %}
-            </div>
+    </nav>
+</header>
+<main class="hero is-fullheight-with-navbar">
+    <div class="has-text-centered mt-5">
+        <p class="title">{% block header %}{% endblock %}</p>
+    </div>
+    <div class="hero-body">
+        <div class="container content is-flex is-flex-direction-column is-justify-content-center">
+            {% block content %}{% endblock %}
         </div>
-    </main>
-    <footer class="footer hero-foot">
-        <div class="content has-text-centered">
-            <p>Martin Schneider &copy; 2025</p>
-        </div>
-    </footer>
-    {% include "modals/movie_modal.html" %}
+    </div>
+</main>
+<footer class="footer hero-foot">
+    <div class="content has-text-centered">
+        <p>Martin Schneider &copy; 2025</p>
+    </div>
+</footer>
+{% include "modals/movie_modal.html" %}
 </body>
 </html>

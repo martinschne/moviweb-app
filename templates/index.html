@@ -4,24 +4,24 @@
 {% block header %}Welcome to Moviweb{% endblock %}
 
 {% block content %}
-    <div class="container home-overview has-text-centered">
-        <div class="columns is-mobile is-centered">
-            <div class="column"></div>
-            <div class="column is-narrow">
-                <div class="box circle-overview is-flex is-justify-content-center is-align-items-center">
-                    <div class="content is-unselectable">
-                        <div class="is-size-3">{{ users_count }}<span class="is-size-6">
+<div class="container home-overview has-text-centered">
+    <div class="columns is-mobile is-centered">
+        <div class="column"></div>
+        <div class="column is-narrow">
+            <div class="box circle-overview is-flex is-justify-content-center is-align-items-center">
+                <div class="content is-unselectable">
+                    <div class="is-size-3">{{ users_count }}<span class="is-size-6">
                                 {{ users_count | pluralize("user") }}
                             </span>
-                        </div>
-                        <div class="is-size-3">{{ movies_count }}<span class="is-size-6">
+                    </div>
+                    <div class="is-size-3">{{ movies_count }}<span class="is-size-6">
                                 {{ movies_count | pluralize("movie") }}
                             </span>
-                        </div>
                     </div>
                 </div>
             </div>
-            <div class="column"></div>
         </div>
+        <div class="column"></div>
     </div>
+</div>
 {% endblock %}
