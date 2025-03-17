@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
     const MAX_NOTE_LENGTH = 120;
 
     const hamburger = document.querySelector(".navbar-burger");
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * Remove residual note validation message if present.
      */
     function showAddNoteSection() {
-        const noteText = document.querySelector("#note-text").textContent || '';
+        const noteText = document.querySelector("#note-text").textContent || "";
         setNoteRemainingCharacters(getNoteRemainingCharacters(noteText));
         displayNoteValidation("");
         addNoteSection.classList.remove("is-hidden");
@@ -124,14 +124,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * Handle validation of movie data:
-     * When value is 'None' return 'N/A', else return the value.
+     * When value is "None" return "N/A", else return the value.
      *
      * Explanation:
-     *      When no value was found in backend the value returned is 'None'.
-     *      Unknown values from backend have value 'N/A'.
-     *      This function unifies the output to 'N/A' for unknown values.
+     *      When no value was found in backend the value returned is "None".
+     *      Unknown values from backend have value "N/A".
+     *      This function unifies the output to "N/A" for unknown values.
      * @param text text data for validation
-     * @returns {*|string} valid text value or 'N/A'
+     * @returns {*|string} valid text value or "N/A"
      */
     function validateDataValue(text) {
         if (text === "None") {
@@ -197,15 +197,15 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     function openModal($modal, data) {
         assignDataToMovieModal($modal, data);
-        $modal.classList.add('is-active');
+        $modal.classList.add("is-active");
     }
 
     /**
      * Close the active modal and clean modal data.
-     * @param $el modal element to assign 'is-active' class to
+     * @param $el modal element to assign "is-active" class to
      */
     function closeModal($el) {
-        $el.classList.remove('is-active');
+        $el.classList.remove("is-active");
         modalCleanup();
     }
 
@@ -213,7 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * Hide all active modals on the page.
      */
     function closeAllModals() {
-        (document.querySelectorAll('.modal') || []).forEach(($modal) => {
+        (document.querySelectorAll(".modal") || []).forEach(($modal) => {
             closeModal($modal);
         });
     }
@@ -308,21 +308,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // *** MODAL EVENTS ***
 
     // remove notification from page upon clicking on the delete button
-    (document.querySelectorAll('.notification .delete') || []).forEach((delete_button) => {
+    (document.querySelectorAll(".notification .delete") || []).forEach((delete_button) => {
         const notification = delete_button.parentNode;
 
-        delete_button.addEventListener('click', () => {
+        delete_button.addEventListener("click", () => {
             notification.parentNode.removeChild(notification);
         });
     });
 
     // add a click event on buttons to open a specific modal
-    (document.querySelectorAll('.js-modal-trigger') || []).forEach(($trigger) => {
+    (document.querySelectorAll(".js-modal-trigger") || []).forEach(($trigger) => {
         const modalData = $trigger.dataset;
         const modal = $trigger.dataset.target;
         const $target = document.getElementById(modal);
 
-        $trigger.addEventListener('click', () => {
+        $trigger.addEventListener("click", () => {
             openModal($target, modalData);
         });
     });
@@ -330,15 +330,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // add a click event on various child elements to close the parent modal
     (document.querySelectorAll(".modal-background, .modal-close") || [])
         .forEach(($close) => {
-            const $target = $close.closest('.modal');
+            const $target = $close.closest(".modal");
 
-            $close.addEventListener('click', () => {
+            $close.addEventListener("click", () => {
                 closeModal($target);
             });
         });
 
     // add a keyboard event to close all modals
-    document.addEventListener('keydown',(event) => {
+    document.addEventListener("keydown",(event) => {
         if (event.key === "Escape") {
             closeAllModals();
         }
