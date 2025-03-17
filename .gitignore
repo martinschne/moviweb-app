@@ -159,4 +159,7 @@ __pycache__/
 /static/dist/
 /static/.webassets-cache/
 
+# Exclude db file
+/instance/
+
 # End of https://www.toptal.com/developers/gitignore/api/pycharm,macos

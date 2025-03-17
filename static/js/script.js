@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * @param text note text to display in the textarea element
      */
     function addNoteToTextarea(text) {
-        document.querySelector("#note-textarea").value = text
+        document.querySelector("#note-textarea").value = text;
     }
 
     /**
@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
         addNoteSection.classList.add("is-hidden");
         // note cleanup
         addNoteToTextarea("");
-        addNoteText("")
+        addNoteText("");
     }
 
     /**
@@ -275,7 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * Handle aborting note editing via cancel button.
      */
     function handleCancelNote() {
-        const movieNote = document.querySelector("#note-text").textContent
+        const movieNote = document.querySelector("#note-text").textContent;
 
         if (movieNote !== "") {
             showNoteSection();
@@ -338,7 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
     // add a keyboard event to close all modals
-    document.addEventListener('keydown', (event) => {
+    document.addEventListener('keydown',(event) => {
         if (event.key === "Escape") {
             closeAllModals();
         }

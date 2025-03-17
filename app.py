@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 from urllib.parse import urljoin, urlencode
 
 import requests
@@ -15,10 +16,14 @@ from utils.validation import get_valid_number_or_none, get_valid_url_or_none
 app = Flask(__name__)
 app.config.from_object(Config)
 
+# Ensure the instance directory exists
+if not os.path.exists('instance'):
+    os.makedirs('instance')
+
 assets = Environment(app)
 
-css = Bundle("css/style.css", filters="cssmin", output="dist/css/style.min.css")
-js = Bundle("js/script.js", filters="jsmin", output="dist/js/script.min.js")
+css = Bundle("css/style.css", filters="rcssmin", output="dist/css/style.min.css")
+js = Bundle("js/script.js", filters="rjsmin", output="dist/js/script.min.js")
 
 assets.register("css_all", css)
 assets.register("js_all", js)
