@@ -5,3 +5,4 @@ requests~=2.32.3
 Flask-Assets~=2.1.0
 rcssmin~=1.2.1
 rjsmin~=1.2.4
+python-dotenv~=1.0.1
