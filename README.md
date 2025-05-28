@@ -5,7 +5,7 @@ to save their favorite movies from online movie database.
 
 ## Features:
 
-- add user
+- add user (rate limit 3 per day)
 - add movie to the user
 - add user note to the movie
 - see all users
