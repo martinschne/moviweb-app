@@ -6,6 +6,8 @@ from urllib.parse import urljoin, urlencode
 import requests
 from flask import Flask, render_template, request, redirect, url_for, flash, abort, jsonify
 from flask_assets import Environment, Bundle
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 from config import Config
 from data_manager.sqlite_data_manager import SQLiteDataManager
@@ -15,6 +17,7 @@ from utils.validation import get_valid_number_or_none, get_valid_url_or_none
 
 app = Flask(__name__)
 app.config.from_object(Config)
+limiter = Limiter(key_func=get_remote_address, app=app)
 
 # Ensure the instance directory exists
 if not os.path.exists('instance'):
@@ -98,6 +101,7 @@ def user_movies(user_id: int):
 
 
 @app.route("/add_user", methods=["GET", "POST"])
+@limiter.limit(limit_value="3 per day")
 def add_user():
     """
     Allows the creation of a new user.
@@ -273,28 +277,6 @@ def update_movie(user_id: int, movie_id: int):
     return render_template("forms/update_movie.html", user_id=user_id, movie=updated_movie)
 
 
-@app.route("/users/<int:user_id>/delete_movie/<int:movie_id>")
-def delete_movie(user_id: int, movie_id: int):
-    """
-    Deletes a movie from the user's movie list.
-
-    Args:
-        user_id (int): The ID of the user whose movie list the movie is being removed from.
-        movie_id (int): The ID of the movie to be deleted.
-
-    Returns:
-        Response: Redirects to the user's movie list after deletion.
-    """
-    try:
-        data_manager.delete_movie(movie_id)
-    except MovieNotFoundError as error:
-        abort(404, description=str(error))
-    except DatabaseError as error:
-        abort(500, description=str(error))
-
-    return redirect(url_for("user_movies", user_id=user_id))
-
-
 @app.route("/users/<int:user_id>/add_note/<int:movie_id>", methods=["POST"])
 def add_note(user_id: int, movie_id: int):
     """
@@ -333,6 +315,19 @@ def page_not_found(error):
     """
     error_title = "404 Page Not Found"
     return render_template('error.html', title=error_title, message=error.description), 404
+
+
+@app.errorhandler(429)
+def too_many_requests(error):
+    """
+    Handles 429 errors (too many requests)
+
+    Returns:
+        Response: The rendered 429 error page.
+    """
+    error_title = f"429 Too Many Requests"
+    error_message = f"You exceeded the limit for allowed operations. Please try again later."
+    return render_template('error.html', title=error_title, message=error_message), 429
 
 
 @app.errorhandler(500)
