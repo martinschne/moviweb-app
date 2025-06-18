@@ -14,13 +14,16 @@ to save their favorite movies from online movie database.
 
 ## Tech stack:
 
-- Backend:
-    - Python
-    - Flask & Jinja2
 - Frontend:
     - CSS
     - Bulma
     - JavaScript
+- Backend:
+    - Python
+    - Flask & Jinja2
+- Database
+    - SQL Alchemy
+    - SQLite
 
 ## Usage
 
